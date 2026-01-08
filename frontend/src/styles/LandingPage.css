@@ -1,0 +1,15 @@
+.landing-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.landing-page.light-mode {
+  background: #ffffff;
+  color: #1f2937;
+}
+
+.landing-page.dark-mode {
+  background: #1f2937;
+  color: #f3f4f6;
+}
