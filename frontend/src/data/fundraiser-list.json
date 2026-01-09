@@ -1,0 +1,133 @@
+[
+  {
+    "id": 1,
+    "title": "Aide Médicale pour Maman",
+    "creator": "Jean Durand",
+    "category": "health",
+    "image": "/medical-help.jpg",
+    "goal": 2000000,
+    "raised": 1200000,
+    "donors": 45,
+    "status": "active",
+    "closedDate": null,
+    "isPrivate": false,
+    "description": "Aide pour les frais médicaux de ma mère",
+    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "donations": [
+      {
+        "id": 1,
+        "name": "Monique Dilé",
+        "amount": 14000,
+        "date": "23 févr. 2025",
+        "description": "Je suis impressionnée par votre optimisme. Quelle leçon de vie !"
+      },
+      {
+        "id": 2,
+        "name": "Baya",
+        "amount": 20000,
+        "date": "13 févr. 2025",
+        "description": "Courage à vous et votre maman"
+      },
+      { "id": 3, "name": "Aissa", "amount": null, "date": "08 févr. 2025", "isAnonymous": true },
+      { "id": 4, "name": "Ab", "amount": 9000, "date": "07 févr. 2025", "description": "Bon courage !" },
+      { "id": 5, "name": "Anonymous", "amount": null, "date": "06 févr. 2025", "isAnonymous": true },
+      {
+        "id": 6,
+        "name": "Sarah Cohen",
+        "amount": 25000,
+        "date": "05 févr. 2025",
+        "description": "Pensées à votre famille"
+      }
+    ],
+    "updates": [
+      {
+        "id": 1,
+        "author": "Jean Durand",
+        "date": "23 févr. 2025",
+        "content": "Merci beaucoup pour votre soutien ! Maman va beaucoup mieux.",
+        "type": "text",
+        "likes": 15
+      },
+      {
+        "id": 2,
+        "author": "Marie Dupont",
+        "date": "20 févr. 2025",
+        "content": "Nous pensons à vous tous les jours.",
+        "type": "text",
+        "likes": 8
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Construction École Rurale",
+    "creator": "Marie Rakoto",
+    "category": "education",
+    "image": "/school-construction.jpg",
+    "goal": 5000000,
+    "raised": 3400000,
+    "donors": 128,
+    "status": "active",
+    "closedDate": null,
+    "isPrivate": false,
+    "description": "Construire une école dans une zone rurale",
+    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "donations": [
+      { "id": 1, "name": "Anonymous", "amount": null, "date": "11 janv. 2026", "isAnonymous": true },
+      { "id": 2, "name": "Rija", "amount": 25000, "date": "10 janv. 2026", "description": "L'éducation est l'avenir" }
+    ],
+    "updates": [
+      {
+        "id": 1,
+        "author": "Marie Rakoto",
+        "date": "08 janv. 2026",
+        "content": "Le terrain est validé, début des travaux bientôt.",
+        "type": "text",
+        "likes": 3
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Secours Urgence",
+    "creator": "Community Help",
+    "category": "emergency",
+    "image": "/disaster-relief.jpg",
+    "goal": 1500000,
+    "raised": 1450000,
+    "donors": 92,
+    "status": "active",
+    "closedDate": null,
+    "isPrivate": false,
+    "description": "Aide d'urgence pour les sinistrés",
+    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "donations": [{ "id": 1, "name": "Anonymous", "amount": null, "date": "09 janv. 2026", "isAnonymous": true }],
+    "updates": []
+  },
+  {
+    "id": 4,
+    "title": "Projet Eau Potable",
+    "creator": "NGO Water",
+    "category": "social",
+    "image": "/water-project.jpg",
+    "goal": 3000000,
+    "raised": 2100000,
+    "donors": 73,
+    "status": "closed",
+    "closedDate": "26 février 2025",
+    "isPrivate": true,
+    "description": "Accès à l'eau potable pour tous",
+    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "donations": [{ "id": 1, "name": "Anonymous", "amount": null, "date": "26 févr. 2025", "isAnonymous": true }],
+    "updates": [
+      {
+        "id": 1,
+        "author": "NGO Water",
+        "date": "26 févr. 2025",
+        "content": "Cagnotte clôturée, merci à tous.",
+        "type": "text",
+        "likes": 20
+      }
+    ]
+  }
+]

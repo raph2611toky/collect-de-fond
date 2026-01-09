@@ -5,10 +5,12 @@
   --secondary: #14b8a6;
   --secondary-light: #2dd4bf;
   --bg-dark: #0f172a;
+  --color-bg-secondary: #151e2b;
   --bg-card: #1e293b;
   --text-primary: #ffffff;
   --text-secondary: #cbd5e1;
   --border-color: rgba(148, 163, 184, 0.2);
+  --color-primary: #6366f1;
 }
 
 .header {
@@ -28,7 +30,7 @@
 
 .header-container {
   max-width: 1400px;
-  margin: 0 auto;
+  margin: 0 auto 1rem auto;
   padding: 0 2rem;
   display: flex;
   align-items: center;
@@ -119,6 +121,7 @@
   font-size: 0.9rem;
   transition: all 0.3s ease;
   font-family: inherit;
+  border-color: var(--color-primary);
 }
 
 .search-input::placeholder {

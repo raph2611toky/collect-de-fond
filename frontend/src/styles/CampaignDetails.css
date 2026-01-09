@@ -1,17 +1,18 @@
 .campaign-details {
   --primary-green: #2ecc71;
-  --dark-bg: #1a1a1a;
+  --dark-bg: #0f172a;
   --light-bg: #ffffff;
   --dark-text: #f0f0f0;
   --light-text: #333333;
   --border-color: #e0e0e0;
+  --blue-dark: #0f172a;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 .campaign-details.dark-mode {
-  background-color: var(--dark-bg);
+  background: var(--dark-bg);
   color: var(--dark-text);
 }
 
@@ -569,6 +570,264 @@
   color: var(--primary-green);
 }
 
+.recent-donations-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--border-color);
+}
+
+.campaign-details.dark-mode .recent-donations-section {
+  border-top-color: #444;
+}
+
+.recent-donations-section h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--primary-green);
+  margin-bottom: 1.5rem;
+}
+
+.donations-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.donation-card {
+  display: grid;
+  grid-template-columns: 120px 1fr 120px;
+  gap: 1.5rem;
+  padding: 1.25rem;
+  background: rgba(46, 204, 113, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  align-items: center;
+}
+
+.campaign-details.dark-mode .donation-card {
+  background: rgba(46, 204, 113, 0.08);
+  border-color: #444;
+}
+
+.donation-card-amount {
+  padding: 0.75rem 1rem;
+  background: rgba(46, 204, 113, 0.15);
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--primary-green);
+  text-align: center;
+}
+
+.campaign-details.dark-mode .donation-card-amount {
+  background: rgba(46, 204, 113, 0.25);
+}
+
+.donation-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.donor-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.donor-description {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.donation-card-date {
+  text-align: right;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.show-more-btn {
+  padding: 10px 20px;
+  background-color: var(--primary-green);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+  width: 100%;
+}
+
+.show-more-btn:hover {
+  background-color: #27ae60;
+}
+
+.share-section {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: rgba(46, 204, 113, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.campaign-details.dark-mode .share-section {
+  background: rgba(46, 204, 113, 0.08);
+  border-color: #444;
+}
+
+.share-section h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary-green);
+  margin-bottom: 1.5rem;
+}
+
+.share-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.share-btn {
+  padding: 10px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s;
+  flex: 1;
+  min-width: 150px;
+  justify-content: center;
+}
+
+.campaign-details.dark-mode .share-btn {
+  background: #2a2a2a;
+  border-color: #444;
+  color: var(--dark-text);
+}
+
+.share-btn.facebook {
+  color: #1877f2;
+}
+
+.share-btn.facebook:hover {
+  background: #f0f2f5;
+  border-color: #1877f2;
+}
+
+.campaign-details.dark-mode .share-btn.facebook:hover {
+  background: rgba(24, 119, 242, 0.1);
+}
+
+.share-btn.twitter {
+  color: #1da1f2;
+}
+
+.share-btn.twitter:hover {
+  background: #f7f9fa;
+  border-color: #1da1f2;
+}
+
+.campaign-details.dark-mode .share-btn.twitter:hover {
+  background: rgba(29, 161, 242, 0.1);
+}
+
+.share-btn.email {
+  color: var(--primary-green);
+}
+
+.share-btn.email:hover {
+  background: rgba(46, 204, 113, 0.1);
+  border-color: var(--primary-green);
+}
+
+.copy-link-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.copy-link-section label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.copy-link-input {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.copy-link-input input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: white;
+}
+
+.campaign-details.dark-mode .copy-link-input input {
+  background: #3a3a3a;
+  border-color: #555;
+  color: var(--dark-text);
+}
+
+.copy-btn {
+  padding: 10px 16px;
+  background: var(--primary-green);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.copy-btn:hover {
+  background: #27ae60;
+}
+
+.update-image {
+  width: 100%;
+  max-height: 400px;
+  border-radius: 6px;
+  object-fit: cover;
+  margin: 1rem 0;
+}
+
+.update-video {
+  width: 100%;
+  margin: 1rem 0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.form-files {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-files input {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.campaign-details.dark-mode .form-files input {
+  background: #3a3a3a;
+  border-color: #555;
+  color: var(--dark-text);
+}
+
 @media (max-width: 768px) {
   .campaign-header {
     grid-template-columns: 1fr;
@@ -595,5 +854,27 @@
 
   .details-info-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .donation-card {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .donation-card-amount,
+  .donation-card-date {
+    text-align: left;
+  }
+
+  .share-buttons {
+    flex-direction: column;
+  }
+
+  .share-btn {
+    min-width: unset;
+  }
+
+  .copy-link-input {
+    flex-direction: column;
   }
 }

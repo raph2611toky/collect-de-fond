@@ -1,10 +1,31 @@
 .profile-page {
-  padding: 2rem;
+  --primary-green: hwb(145 18% 20%);
+  --dark-bg: #0f172a;
+  --dark-bg-input: rgb(17, 27, 47);
+  --dark-bg-form: #141f37;
+  --light-bg: #ffffff;
+  --dark-text: #f0f0f0;
+  --light-text: #333333;
+  --border-color: #e0e0e0;
+  --blue-dark: #1e40af;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+.profile-page.dark-mode {
+  background: var(--dark-bg);
+  color: var(--dark-text);
+}
+
+.profile-page.light-mode {
+  background-color: var(--light-bg);
+  color: var(--light-text);
 }
 
 .profile-container {
   max-width: 1000px;
   margin: 0 auto;
+  padding: 0;
 }
 
 .profile-header {
@@ -12,11 +33,18 @@
   align-items: center;
   gap: 2rem;
   padding: 2rem;
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   margin-bottom: 2rem;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.profile-page.dark-mode .profile-header {
+  background: var(--dark-bg-input);
+  border-color: #444;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .profile-avatar {
@@ -30,6 +58,7 @@
   color: white;
   font-size: 2rem;
   font-weight: 700;
+  flex-shrink: 0;
 }
 
 .profile-info {
@@ -39,16 +68,24 @@
 .profile-info h1 {
   font-size: 1.8rem;
   font-weight: 700;
-  color: var(--color-text);
+  color: var(--light-text);
   margin: 0 0 0.5rem 0;
   transition: color 0.3s ease;
 }
 
+.profile-page.dark-mode .profile-info h1 {
+  color: var(--dark-text);
+}
+
 .profile-info p {
-  color: var(--color-text-secondary);
+  color: #666;
   margin: 0;
   font-size: 0.95rem;
   transition: color 0.3s ease;
+}
+
+.profile-page.dark-mode .profile-info p {
+  color: #aaa;
 }
 
 .edit-btn {
@@ -61,6 +98,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: inherit;
+  white-space: nowrap;
 }
 
 .edit-btn:hover {
@@ -77,15 +115,22 @@
 
 .stat-card {
   padding: 1.5rem;
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   text-align: center;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.profile-page.dark-mode .stat-card {
+  background: var(--dark-bg-input);
+  border-color: #444;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .stat-card:hover {
-  border-color: var(--color-primary);
+  border-color: #6366f1;
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(99, 102, 241, 0.15);
 }
@@ -101,10 +146,14 @@
 }
 
 .stat-label {
-  color: var(--color-text-secondary);
+  color: #666;
   font-size: 0.9rem;
   font-weight: 500;
   transition: color 0.3s ease;
+}
+
+.profile-page.dark-mode .stat-label {
+  color: #aaa;
 }
 
 .profile-sections {
@@ -115,18 +164,29 @@
 
 .profile-section {
   padding: 2rem;
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.profile-page.dark-mode .profile-section {
+  background: var(--dark-bg-input);
+  border-color: #444;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .profile-section h2 {
   font-size: 1.3rem;
   font-weight: 700;
-  color: var(--color-text);
+  color: var(--light-text);
   margin: 0 0 1.5rem 0;
   transition: color 0.3s ease;
+}
+
+.profile-page.dark-mode .profile-section h2 {
+  color: var(--dark-text);
 }
 
 .edit-form,
@@ -138,20 +198,30 @@
 
 .edit-form input {
   padding: 0.75rem 1rem;
-  background: var(--color-bg-tertiary);
-  border: 1px solid var(--color-border);
+  background: #f5f5f5;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  color: var(--color-text);
+  color: var(--light-text);
   font-family: inherit;
   font-size: 0.95rem;
   transition: all 0.3s ease;
 }
 
+.profile-page.dark-mode .edit-form input {
+  background: #3a3a3a;
+  border-color: #555;
+  color: var(--dark-text);
+}
+
 .edit-form input:focus {
   outline: none;
-  border-color: var(--color-primary);
-  background: var(--color-bg);
+  border-color: #6366f1;
+  background: white;
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.profile-page.dark-mode .edit-form input:focus {
+  background: #4a4a4a;
 }
 
 .form-row {
@@ -159,8 +229,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 0;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--border-color);
   transition: border-color 0.3s ease;
+}
+
+.profile-page.dark-mode .form-row {
+  border-bottom-color: #444;
 }
 
 .form-row:last-child {
@@ -168,28 +242,42 @@
 }
 
 .label {
-  color: var(--color-text-secondary);
+  color: #666;
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
+.profile-page.dark-mode .label {
+  color: #aaa;
+}
+
 .value {
-  color: var(--color-text);
+  color: var(--light-text);
   font-weight: 600;
   transition: color 0.3s ease;
 }
 
+.profile-page.dark-mode .value {
+  color: var(--dark-text);
+}
+
 .mvola-display {
   padding: 1rem;
-  background: var(--color-bg-tertiary);
-  border: 1px solid var(--color-primary);
+  background: #f5f5f5;
+  border: 1px solid #6366f1;
   border-radius: 8px;
-  color: var(--color-text);
+  color: var(--light-text);
   font-weight: 600;
   text-align: center;
   font-size: 1.1rem;
   letter-spacing: 1px;
   transition: all 0.3s ease;
+}
+
+.profile-page.dark-mode .mvola-display {
+  background: var(--dark-bg-input);
+  border-color: #666;
+  color: var(--dark-text);
 }
 
 @media (max-width: 768px) {
@@ -209,5 +297,9 @@
 
   .profile-stats {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .edit-btn {
+    width: 100%;
   }
 }

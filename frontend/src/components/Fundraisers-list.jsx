@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom"
 import { useLanguage } from "../context/LanguageContext"
 import FundraiserCard from "./Fundraiser-card"
 import "../styles/Fundraisers-list.css"
-import { useState } from "react"
+import { useEffect, useState } from "react";
+import fundraisers from "../data/fundraiser-list.json";
+console.log(fundraisers);
 
 const translations = {
   mg: {
@@ -47,54 +49,10 @@ export default function FundraisersList({ onCreateClick }) {
     { id: "social", label: t.social, icon: "🤝" },
   ]
 
-  const fundraisers = [
-    {
-      id: 1,
-      title: "Aide Médicale pour Maman",
-      creator: "Jean Durand",
-      category: "health",
-      image: "/medical-help.jpg",
-      goal: 2000000,
-      raised: 1200000,
-      donors: 45,
-      description: "Aide pour les frais médicaux de ma mère",
-    },
-    {
-      id: 2,
-      title: "Construction École Rurale",
-      creator: "Marie Rakoto",
-      category: "education",
-      image: "/school-construction.jpg",
-      goal: 5000000,
-      raised: 3400000,
-      donors: 128,
-      description: "Construire une école dans une zone rurale",
-    },
-    {
-      id: 3,
-      title: "Secours Urgence",
-      creator: "Community Help",
-      category: "emergency",
-      image: "/disaster-relief.jpg",
-      goal: 1500000,
-      raised: 1450000,
-      donors: 92,
-      description: "Aide d'urgence pour les sinistrés",
-    },
-    {
-      id: 4,
-      title: "Projet Eau Potable",
-      creator: "NGO Water",
-      category: "social",
-      image: "/water-project.jpg",
-      goal: 3000000,
-      raised: 2100000,
-      donors: 73,
-      description: "Accès à l'eau potable pour tous",
-    },
-  ]
-
-  const filtered = selectedCategory === "all" ? fundraisers : fundraisers.filter((f) => f.category === selectedCategory)
+  const filtered =
+    selectedCategory === "all"
+      ? fundraisers
+      : fundraisers.filter((f) => f.category === selectedCategory);
 
   return (
     <div className="fundraisers-list">

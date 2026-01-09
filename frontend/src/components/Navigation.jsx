@@ -28,7 +28,7 @@ export default function Navigation({ currentPage, setCurrentPage, translations: 
   const navItems = [
     { id: "home", label: t.home, icon: "📋" },
     { id: "create", label: t.create, icon: "✨" },
-    { id: "profile", label: t.profile, icon: "👤" },
+    // { id: "profile", label: t.profile, icon: "👤" },
   ]
 
   return (

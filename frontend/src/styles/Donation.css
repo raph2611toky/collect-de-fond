@@ -1,15 +1,18 @@
 .donation-page {
   --primary-green: #2ecc71;
-  --dark-bg: #1a1a1a;
+  --dark-bg: #0f172a;
+  --dark-bg-input: rgb(17, 27, 47);
+  --dark-bg-form: #141f37;
   --light-bg: #ffffff;
   --dark-text: #f0f0f0;
   --light-text: #333333;
+  --blue-dark: #1e40af;
   min-height: 100vh;
   padding: 40px 20px;
 }
 
 .donation-page.dark-mode {
-  background-color: var(--dark-bg);
+  background: var(--dark-bg);
   color: var(--dark-text);
 }
 
@@ -46,7 +49,7 @@
 }
 
 .donation-page.dark-mode .donation-form-wrapper {
-  background-color: #2a2a2a;
+  background-color: var(--dark-bg-form);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -67,6 +70,11 @@
   margin-bottom: 15px;
   text-transform: uppercase;
   opacity: 0.8;
+  color: var(--light-text);
+}
+
+.donation-page.dark-mode .amount-section > label {
+  color: var(--dark-text);
 }
 
 .predefined-amounts {
@@ -85,10 +93,11 @@
   font-weight: 600;
   font-size: 14px;
   transition: all 0.3s;
+  color: var(--light-text);
 }
 
 .donation-page.dark-mode .amount-btn {
-  background-color: #3a3a3a;
+  background-color: var(--dark-bg-input);
   color: var(--dark-text);
 }
 
@@ -108,24 +117,33 @@
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 8px;
+  color: var(--light-text);
 }
 
-.form-group input {
+.donation-page.dark-mode .form-group label {
+  color: var(--dark-text);
+}
+
+.form-group input,
+.form-group textarea {
   width: 100%;
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 14px;
   box-sizing: border-box;
+  font-family: inherit;
 }
 
-.donation-page.dark-mode .form-group input {
-  background-color: #3a3a3a;
+.donation-page.dark-mode .form-group input,
+.donation-page.dark-mode .form-group textarea {
+  background-color: var(--dark-bg-input);
   border-color: #555;
   color: var(--dark-text);
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group textarea:focus {
   outline: none;
   border-color: var(--primary-green);
   box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
@@ -136,21 +154,111 @@
   cursor: not-allowed;
 }
 
+.donor-section {
+  margin-bottom: 30px;
+}
+
+/* Add checkboxes section styling */
+.checkboxes-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 15px;
+}
+
 .checkbox-group {
   display: flex;
   align-items: center;
   gap: 10px;
   cursor: pointer;
   font-size: 14px;
+  color: var(--light-text);
+}
+
+.donation-page.dark-mode .checkbox-group {
+  color: var(--dark-text);
 }
 
 .checkbox-group input {
   width: auto;
   margin: 0;
+  cursor: pointer;
 }
 
-.donor-section {
+/* Add payment method section with SVG icons */
+.payment-method-section {
   margin-bottom: 30px;
+}
+
+.payment-method-section > label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  opacity: 0.8;
+  color: var(--light-text);
+}
+
+.donation-page.dark-mode .payment-method-section > label {
+  color: var(--dark-text);
+}
+
+.payment-methods {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.payment-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  background: white;
+  transition: all 0.3s;
+  color: var(--light-text);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.donation-page.dark-mode .payment-option {
+  background: var(--dark-bg-input);
+  border-color: #555;
+  color: var(--dark-text);
+}
+
+.payment-option:hover {
+  border-color: var(--primary-green);
+}
+
+.payment-option input {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+}
+
+.payment-option input:checked {
+  accent-color: var(--primary-green);
+}
+
+.payment-option.active {
+  background: var(--primary-green);
+  border-color: var(--primary-green);
+  color: white;
+}
+
+.payment-icon {
+  display: flex;
+  align-items: center;
+  color: var(--primary-green);
+}
+
+.payment-option input:checked + .payment-icon {
+  color: white;
 }
 
 .pay-btn {
@@ -179,5 +287,9 @@
 
   .predefined-amounts {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .payment-methods {
+    grid-template-columns: 1fr;
   }
 }

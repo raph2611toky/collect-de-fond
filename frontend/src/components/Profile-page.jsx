@@ -1,7 +1,9 @@
 "use client"
 
 import { useState } from "react"
+import { useTheme } from "../context/ThemeContext"
 import { useLanguage } from "../context/LanguageContext"
+import Header from "./Header"
 import "../styles/Profile-page.css"
 
 const translations = {
@@ -13,6 +15,10 @@ const translations = {
     stats: "Mga Istatistika",
     edit: "I-edit",
     save: "I-save",
+    campaigns_label: "Kampanya",
+    collected: "Nakolekta",
+    donors: "Mpandoa",
+    goal: "Tanjon'aina",
   },
   fr: {
     title: "Mon Profil",
@@ -22,6 +28,10 @@ const translations = {
     stats: "Statistiques",
     edit: "Modifier",
     save: "Enregistrer",
+    campaigns_label: "Campagnes",
+    collected: "Collecté",
+    donors: "Donateurs",
+    goal: "Objectif",
   },
   en: {
     title: "My Profile",
@@ -31,12 +41,17 @@ const translations = {
     stats: "Statistics",
     edit: "Edit",
     save: "Save",
+    campaigns_label: "Campaigns",
+    collected: "Collected",
+    donors: "Donors",
+    goal: "Goal",
   },
 }
 
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false)
   const { language } = useLanguage()
+  const { isDark } = useTheme()
   const [profile, setProfile] = useState({
     name: "Jean Durand",
     email: "jean@example.com",
@@ -55,7 +70,8 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="profile-page">
+    <div className={`profile-page ${isDark ? "dark-mode" : "light-mode"}`}>
+      <Header />
       <div className="profile-container">
         <div className="profile-header">
           <div className="profile-avatar">JD</div>
@@ -71,19 +87,19 @@ export default function ProfilePage() {
         <div className="profile-stats">
           <div className="stat-card">
             <div className="stat-number">3</div>
-            <div className="stat-label">Campagnes</div>
+            <div className="stat-label">{t.campaigns_label}</div>
           </div>
           <div className="stat-card">
             <div className="stat-number">12.5K Ar</div>
-            <div className="stat-label">Collecté</div>
+            <div className="stat-label">{t.collected}</div>
           </div>
           <div className="stat-card">
             <div className="stat-number">246</div>
-            <div className="stat-label">Donateurs</div>
+            <div className="stat-label">{t.donors}</div>
           </div>
           <div className="stat-card">
             <div className="stat-number">89%</div>
-            <div className="stat-label">Objectif</div>
+            <div className="stat-label">{t.goal}</div>
           </div>
         </div>
 
