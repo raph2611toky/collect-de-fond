@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useLanguage } from "../context/LanguageContext"
 import "../styles/Profile-page.css"
 
 const translations = {
@@ -33,8 +34,9 @@ const translations = {
   },
 }
 
-export default function ProfilePage({ language }) {
+export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false)
+  const { language } = useLanguage()
   const [profile, setProfile] = useState({
     name: "Jean Durand",
     email: "jean@example.com",
@@ -61,7 +63,7 @@ export default function ProfilePage({ language }) {
             <h1>{profile.name}</h1>
             <p>{profile.email}</p>
           </div>
-          <button className="edit-btn" onClick={() => setIsEditing(!isEditing)}>
+          <button className="edit-btn" onClick={() => (isEditing ? handleSave() : setIsEditing(true))}>
             {isEditing ? t.save : t.edit}
           </button>
         </div>
@@ -72,7 +74,7 @@ export default function ProfilePage({ language }) {
             <div className="stat-label">Campagnes</div>
           </div>
           <div className="stat-card">
-            <div className="stat-number">$12.5K</div>
+            <div className="stat-number">12.5K Ar</div>
             <div className="stat-label">Collecté</div>
           </div>
           <div className="stat-card">

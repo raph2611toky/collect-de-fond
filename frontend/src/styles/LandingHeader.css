@@ -148,7 +148,8 @@
 }
 
 .btn-login,
-.btn-signup {
+.btn-signup,
+.btn-create-landing {
   padding: 0.625rem 1.25rem;
   border: none;
   border-radius: 0.5rem;
@@ -172,13 +173,15 @@
   background-color: #374151;
 }
 
-.btn-signup {
+.btn-signup,
+.btn-create-landing {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
   border: none;
 }
 
-.btn-signup:hover {
+.btn-signup:hover,
+.btn-create-landing:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }

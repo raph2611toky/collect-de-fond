@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useTheme } from "../context/ThemeContext"
+import { useLanguage } from "../context/LanguageContext"
 import Header from "../components/Header"
 import Navigation from "../components/Navigation"
 import FundraisersList from "../components/Fundraisers-list"
@@ -11,60 +12,56 @@ import "../styles/Dashboard.css"
 
 export default function DashboardPage() {
   const [currentPage, setCurrentPage] = useState("home")
-  const [language, setLanguage] = useState("fr")
   const { isDark } = useTheme()
+  const { language } = useLanguage()
 
   const translations = {
     mg: {
       home: "Tahiry",
       create: "Lumikra",
       profile: "Profil",
-      donate: "Mandoa",
-      viewMore: "Jerena bebe",
-      share: "Mizara",
-      comment: "Kamanty",
+      createNew: "Lumikra Ny Fanamafisam-pibemaso",
     },
     fr: {
       home: "Accueil",
       create: "Créer",
       profile: "Profil",
-      donate: "Donner",
-      viewMore: "Voir plus",
-      share: "Partager",
-      comment: "Commenter",
+      createNew: "Créer une collecte",
     },
     en: {
       home: "Home",
       create: "Create",
       profile: "Profile",
-      donate: "Donate",
-      viewMore: "View More",
-      share: "Share",
-      comment: "Comment",
+      createNew: "Create a fundraiser",
     },
   }
 
   const renderPage = () => {
     switch (currentPage) {
       case "create":
-        return <CreateFundraiser language={language} translations={translations[language]} />
+        return <CreateFundraiser />
       case "profile":
-        return <ProfilePage language={language} translations={translations[language]} />
+        return <ProfilePage />
       default:
-        return <FundraisersList language={language} translations={translations[language]} />
+        return <FundraisersList onCreateClick={() => setCurrentPage("create")} />
     }
   }
 
   return (
     <div className={`dashboard-container ${isDark ? "dark-mode" : "light-mode"}`}>
-      <Header language={language} setLanguage={setLanguage} />
-      <Navigation
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        language={language}
-        translations={translations[language]}
-      />
+      <Header />
+      <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} translations={translations[language]} />
       <main className="main-content">{renderPage()}</main>
+
+      {currentPage !== "create" && (
+        <button
+          className="fab-button"
+          onClick={() => setCurrentPage("create")}
+          title={translations[language].createNew}
+        >
+          +
+        </button>
+      )}
     </div>
   )
 }

@@ -81,7 +81,7 @@ export default function LandingPagePro({ language = "fr", onNavigate }) {
             <h1 className="hero-title">{t.heroTitle}</h1>
             <p className="hero-description">{t.heroDesc}</p>
             <div className="hero-actions">
-              <button className="btn-primary-landing" onClick={() => onNavigate("create")}>
+              <button className="btn-primary-landing" onClick={() => onNavigate("dashboard")}>
                 {t.startFree}
               </button>
               <button className="btn-secondary-landing">

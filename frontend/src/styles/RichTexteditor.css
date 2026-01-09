@@ -1,0 +1,98 @@
+.rich-editor {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.dark-mode .rich-editor {
+  border-color: #333;
+  background: #1a1a1a;
+}
+
+.editor-toolbar {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #f8f8f8;
+  border-radius: 8px 8px 0 0;
+}
+
+.dark-mode .editor-toolbar {
+  border-color: #333;
+  background: #222;
+}
+
+.editor-toolbar button {
+  padding: 8px 12px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.dark-mode .editor-toolbar button {
+  background: #2a2a2a;
+  border-color: #444;
+  color: #fff;
+}
+
+.editor-toolbar button:hover {
+  background: #2ecc71;
+  color: #fff;
+  border-color: #2ecc71;
+}
+
+.link-input {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.dark-mode .link-input {
+  border-color: #333;
+}
+
+.link-input input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.dark-mode .link-input input {
+  background: #2a2a2a;
+  border-color: #444;
+  color: #fff;
+}
+
+.link-input button {
+  padding: 8px 16px;
+  background: #2ecc71;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.rich-editor-textarea {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  border-radius: 0 0 8px 8px;
+  background: #fff;
+  color: #333;
+}
+
+.dark-mode .rich-editor-textarea {
+  background: #1a1a1a;
+  color: #fff;
+}

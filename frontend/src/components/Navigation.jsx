@@ -1,30 +1,32 @@
 "use client"
 
+import { useLanguage } from "../context/LanguageContext"
 import "../styles/Navigation.css"
 
 const translations = {
   mg: {
-    fundraisers: "Fanampiana",
-    create: "Lumikra ny Safo",
-    profile: "Profily",
+    home: "Tahiry",
+    create: "Lumikra",
+    profile: "Profil",
   },
   fr: {
-    fundraisers: "Collectes",
-    create: "Créer une collecte",
-    profile: "Mon profil",
+    home: "Accueil",
+    create: "Créer",
+    profile: "Profil",
   },
   en: {
-    fundraisers: "Fundraisers",
-    create: "Create Campaign",
-    profile: "My Profile",
+    home: "Home",
+    create: "Create",
+    profile: "Profile",
   },
 }
 
-export default function Navigation({ currentPage, setCurrentPage, language }) {
-  const t = translations[language]
+export default function Navigation({ currentPage, setCurrentPage, translations: navTranslations }) {
+  const { language } = useLanguage()
+  const t = navTranslations || translations[language]
 
   const navItems = [
-    { id: "fundraisers", label: t.fundraisers, icon: "📋" },
+    { id: "home", label: t.home, icon: "📋" },
     { id: "create", label: t.create, icon: "✨" },
     { id: "profile", label: t.profile, icon: "👤" },
   ]

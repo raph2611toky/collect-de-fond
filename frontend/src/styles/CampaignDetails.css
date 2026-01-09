@@ -1,0 +1,599 @@
+.campaign-details {
+  --primary-green: #2ecc71;
+  --dark-bg: #1a1a1a;
+  --light-bg: #ffffff;
+  --dark-text: #f0f0f0;
+  --light-text: #333333;
+  --border-color: #e0e0e0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.campaign-details.dark-mode {
+  background-color: var(--dark-bg);
+  color: var(--dark-text);
+}
+
+.campaign-details.light-mode {
+  background-color: var(--light-bg);
+  color: var(--light-text);
+}
+
+.campaign-details-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  width: 100%;
+  flex: 1;
+}
+
+.back-btn {
+  padding: 8px 16px;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 30px;
+  transition: all 0.3s;
+}
+
+.campaign-details.dark-mode .back-btn {
+  border-color: #444;
+  color: var(--dark-text);
+}
+
+.back-btn:hover {
+  background-color: var(--primary-green);
+  color: white;
+  border-color: var(--primary-green);
+}
+
+.campaign-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 50px;
+}
+
+.campaign-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 0;
+}
+
+.campaign-details.dark-mode .campaign-tabs {
+  border-bottom-color: #444;
+}
+
+.tab-btn {
+  padding: 1rem 1.5rem;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--light-text);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-bottom: -2px;
+}
+
+.campaign-details.dark-mode .tab-btn {
+  color: var(--dark-text);
+}
+
+.tab-btn:hover {
+  color: var(--primary-green);
+}
+
+.tab-btn.active {
+  border-bottom-color: var(--primary-green);
+  color: var(--primary-green);
+}
+
+.campaign-image-section {
+  display: flex;
+  align-items: center;
+}
+
+.campaign-main-image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.campaign-stats-section h1 {
+  font-size: 32px;
+  margin: 0 0 10px 0;
+  font-weight: 700;
+}
+
+.creator-name {
+  font-size: 16px;
+  opacity: 0.7;
+  margin: 0 0 25px 0;
+}
+
+.stats-box {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--primary-green);
+}
+
+.stat-label {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.progress-bar {
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.campaign-details.dark-mode .progress-bar {
+  background-color: #444;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--primary-green);
+  transition: width 0.3s;
+}
+
+.security-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background-color: rgba(46, 204, 113, 0.1);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--primary-green);
+}
+
+.campaign-details.dark-mode .security-badge {
+  background-color: rgba(46, 204, 113, 0.15);
+}
+
+.donate-btn {
+  padding: 14px 28px;
+  background-color: var(--primary-green);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.donate-btn:hover:not(:disabled) {
+  background-color: #27ae60;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+}
+
+.donate-btn:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
+.campaign-body {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.description-section,
+.updates-section,
+.participants-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.details-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.details-section h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--primary-green);
+}
+
+.video-container {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin: 1rem 0;
+}
+
+.campaign-details.dark-mode .video-container {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.video-container iframe {
+  display: block;
+  width: 100%;
+}
+
+.description-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.description-content p {
+  font-size: 16px;
+  line-height: 1.8;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.details-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.detail-card {
+  padding: 1.5rem;
+  background: rgba(46, 204, 113, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.campaign-details.dark-mode .detail-card {
+  background: rgba(46, 204, 113, 0.1);
+  border-color: #444;
+}
+
+.detail-card h3 {
+  font-size: 0.9rem;
+  color: var(--primary-green);
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.detail-status-closed {
+  color: #ef4444;
+}
+
+.description-section h2,
+.updates-section h2,
+.participants-section h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--primary-green);
+}
+
+.description-section p {
+  font-size: 16px;
+  line-height: 1.8;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.add-update-btn {
+  padding: 8px 16px;
+  background-color: var(--primary-green);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.add-update-btn:hover {
+  background-color: #27ae60;
+}
+
+.update-form-box {
+  padding: 20px;
+  background-color: rgba(46, 204, 113, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.campaign-details.dark-mode .update-form-box {
+  background-color: rgba(46, 204, 113, 0.1);
+  border-color: #444;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.post-btn,
+.cancel-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.post-btn {
+  background-color: var(--primary-green);
+  color: white;
+}
+
+.post-btn:hover {
+  background-color: #27ae60;
+}
+
+.cancel-btn {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+}
+
+.campaign-details.dark-mode .cancel-btn {
+  border-color: #444;
+  color: var(--dark-text);
+}
+
+.updates-list,
+.donations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.update-item {
+  padding: 20px;
+  background-color: rgba(46, 204, 113, 0.05);
+  border-left: 4px solid var(--primary-green);
+  border-radius: 6px;
+}
+
+.campaign-details.dark-mode .update-item {
+  background-color: rgba(46, 204, 113, 0.1);
+}
+
+.update-header {
+  margin-bottom: 1rem;
+}
+
+.update-author-info {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.author-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-green) 0%, #20a653 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.update-author-info strong {
+  font-size: 15px;
+  display: block;
+}
+
+.update-date {
+  font-size: 12px;
+  opacity: 0.6;
+  display: block;
+}
+
+.update-content {
+  font-size: 15px;
+  line-height: 1.6;
+  opacity: 0.8;
+  margin: 0 0 1rem 0;
+}
+
+.update-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.like-btn,
+.share-btn {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.campaign-details.dark-mode .like-btn,
+.campaign-details.dark-mode .share-btn {
+  border-color: #444;
+}
+
+.like-btn:hover {
+  background: rgba(46, 204, 113, 0.1);
+  border-color: var(--primary-green);
+}
+
+.like-btn.liked {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.share-btn:hover {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: #6366f1;
+}
+
+.donor-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.donation-item {
+  padding: 15px 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.campaign-details.dark-mode .donation-item {
+  border-color: #444;
+}
+
+.donation-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.donation-left strong {
+  font-size: 15px;
+}
+
+.donation-date {
+  font-size: 12px;
+  opacity: 0.6;
+  display: block;
+}
+
+.update-header strong {
+  font-size: 15px;
+}
+
+.update-date {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.update-content {
+  font-size: 15px;
+  line-height: 1.6;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.donation-item {
+  padding: 15px 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.campaign-details.dark-mode .donation-item {
+  border-color: #444;
+}
+
+.donation-left {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.donation-left strong {
+  font-size: 15px;
+}
+
+.donation-date {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.donation-amount {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--primary-green);
+}
+
+@media (max-width: 768px) {
+  .campaign-header {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .campaign-stats-section h1 {
+    font-size: 24px;
+  }
+
+  .stat-value {
+    font-size: 28px;
+  }
+
+  .campaign-tabs {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tab-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .details-info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

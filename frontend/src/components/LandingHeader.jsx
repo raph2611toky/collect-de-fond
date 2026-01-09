@@ -13,7 +13,7 @@ const translations = {
     about: "À propos",
     contact: "Contact",
     login: "Se connecter",
-    signup: "S'inscrire",
+    create: "Créer ma cagnotte",
     lightMode: "Mode clair",
     darkMode: "Mode sombre",
   },
@@ -24,7 +24,7 @@ const translations = {
     about: "Ny Amin-Polantsaina",
     contact: "Mikipivezivezy",
     login: "Miditra",
-    signup: "Mpamatantra",
+    create: "Manao aking cagnotte",
     lightMode: "Makaom-pahala",
     darkMode: "Maingy",
   },
@@ -35,27 +35,27 @@ const translations = {
     about: "About",
     contact: "Contact",
     login: "Login",
-    signup: "Sign Up",
+    create: "Create my fundraiser",
     lightMode: "Light Mode",
     darkMode: "Dark Mode",
   },
 }
 
-export default function LandingHeader({ language, setLanguage, onLoginClick }) {
+export default function LandingHeader({ language, setLanguage, onLoginClick, onCreateClick }) {
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { isDark, toggleTheme } = useTheme()
   const navigate = useNavigate()
   const t = translations[language]
 
-  const handleSignUp = () => {
-    navigate("/register")
+  const handleLogoClick = () => {
+    navigate("/")
   }
 
   return (
     <header className={`landing-header ${isDark ? "dark-mode" : "light-mode"}`}>
       <div className="landing-header-container">
-        <div className="landing-logo">
+        <div className="landing-logo" onClick={handleLogoClick} style={{ cursor: "pointer" }}>
           <svg viewBox="0 0 24 24" fill="currentColor" className="logo-icon">
             <path d="M12 2L2 7V17C2 20.866 7.373 23.5 12 23.5C16.627 23.5 22 20.866 22 17V7L12 2Z" />
           </svg>
@@ -143,8 +143,9 @@ export default function LandingHeader({ language, setLanguage, onLoginClick }) {
           <button className="btn-login" onClick={onLoginClick}>
             {t.login}
           </button>
-          <button className="btn-signup" onClick={handleSignUp}>
-            {t.signup}
+
+          <button className="btn-create-landing" onClick={onCreateClick}>
+            {t.create}
           </button>
 
           <button className="mobile-menu-toggle" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>

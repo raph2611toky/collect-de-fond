@@ -2,6 +2,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .dashboard-container.light-mode {
@@ -16,5 +17,51 @@
 
 .main-content {
   flex: 1;
+  padding: 20px 0;
   overflow-y: auto;
+}
+
+/* Added FAB button styling */
+.fab-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+  color: white;
+  border: none;
+  font-size: 2rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.fab-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.5);
+}
+
+.fab-button:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 10px 0;
+  }
+
+  .fab-button {
+    bottom: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    font-size: 1.8rem;
+  }
 }
