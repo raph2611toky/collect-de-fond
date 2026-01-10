@@ -20,7 +20,8 @@ handler404 = 'config.views.custom_404'
 ALLOWED_HOSTS = [IP_ADDR, '127.0.0.1', 'localhost']
 
 LOCAL_APPS = [
-    'apps.users.apps.UsersConfig'
+    'apps.users.apps.UsersConfig',
+    'apps.fundraisers.apps.FundraisersConfig',
 ]
 
 THIRD_APPS = [

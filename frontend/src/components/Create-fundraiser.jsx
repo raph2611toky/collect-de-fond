@@ -78,10 +78,110 @@ const translations = {
   },
 }
 
+const categories = {
+  "FR": {
+    "animals": "Animaux",
+    "events": "Événements",
+    "humanitarian": "Humanitaire",
+    "medical": "Médical",
+    "education": "Éducation",
+    "environment": "Environnement",
+    "community": "Communauté",
+    "children": "Enfance",
+    "women": "Femmes",
+    "youth": "Jeunesse",
+    "elderly": "Personnes âgées",
+    "disability": "Handicap",
+    "mental_health": "Santé mentale",
+    "clean_water": "Eau potable",
+    "food_aid": "Aide alimentaire",
+    "poverty": "Lutte contre la pauvreté",
+    "disaster_relief": "Aide en cas de catastrophe",
+    "refugees": "Réfugiés",
+    "housing": "Logement",
+    "agriculture": "Agriculture",
+    "climate_change": "Changement climatique",
+    "technology": "Technologie",
+    "innovation": "Innovation",
+    "arts_culture": "Arts et culture",
+    "sports": "Sport",
+    "religion": "Religion",
+    "solidarity": "Solidarité",
+    "projects": "Projets",
+    "other": "Autres"
+  },
+
+  "MG": {
+    "animals": "Biby",
+    "events": "Hetsika",
+    "humanitarian": "Fanampiana maha-olona",
+    "medical": "Medikal",
+    "education": "Edukasiona",
+    "environment": "Kapaligiran",
+    "community": "Komonina",
+    "children": "Ankizy",
+    "women": "Vehivavy",
+    "youth": "Tanora",
+    "elderly": "Zokiolona",
+    "disability": "Fahasembanana",
+    "mental_health": "Fahasalamana ara-tsaina",
+    "clean_water": "Rano fisotro madio",
+    "food_aid": "Fanampiana ara-tsakafo",
+    "poverty": "Ady amin’ny fahantrana",
+    "disaster_relief": "Fanampiana amin’ny loza voajanahary",
+    "refugees": "Mpialokaloka",
+    "housing": "Fonena",
+    "agriculture": "Fambolena",
+    "climate_change": "Fiovan’ny toetr’andro",
+    "technology": "Teknolojia",
+    "innovation": "Fanavaozana",
+    "arts_culture": "Zavakanto sy kolontsaina",
+    "sports": "Fanatanjahantena",
+    "religion": "Fivavahana",
+    "solidarity": "Firaisankina",
+    "projects": "Tetikasa",
+    "other": "Hafa"
+  },
+
+  "EN": {
+    "animals": "Animals",
+    "events": "Events",
+    "humanitarian": "Humanitarian",
+    "medical": "Medical",
+    "education": "Education",
+    "environment": "Environment",
+    "community": "Community",
+    "children": "Children",
+    "women": "Women",
+    "youth": "Youth",
+    "elderly": "Elderly",
+    "disability": "Disability",
+    "mental_health": "Mental Health",
+    "clean_water": "Clean Water",
+    "food_aid": "Food Aid",
+    "poverty": "Poverty Alleviation",
+    "disaster_relief": "Disaster Relief",
+    "refugees": "Refugees",
+    "housing": "Housing",
+    "agriculture": "Agriculture",
+    "climate_change": "Climate Change",
+    "technology": "Technology",
+    "innovation": "Innovation",
+    "arts_culture": "Arts & Culture",
+    "sports": "Sports",
+    "religion": "Religion",
+    "solidarity": "Solidarity",
+    "projects": "Projects",
+    "other": "Other"
+  }
+};
+
+
 export default function CreateFundraiser() {
   const { isDark } = useTheme()
   const { language } = useLanguage()
   const t = translations[language]
+  const categoryLabels = categories[language.toUpperCase()]
 
   const [formData, setFormData] = useState({
     image: null,
@@ -201,15 +301,11 @@ export default function CreateFundraiser() {
           <div className="form-section">
             <label htmlFor="category">{t.choose_category}</label>
             <select id="category" name="category" value={formData.category} onChange={handleInputChange}>
-              <option value="animals">{t.animals}</option>
-              <option value="events">{t.events}</option>
-              <option value="humanitarian">{t.humanitarian}</option>
-              <option value="medical">{t.medical}</option>
-              <option value="other">{t.other}</option>
-              <option value="projects">{t.projects}</option>
-              <option value="religion">{t.religion}</option>
-              <option value="solidarity">{t.solidarity}</option>
-              <option value="sports">{t.sports}</option>
+              {Object.entries(categoryLabels).map(([key, label]) => (
+                <option key={key} value={key}>
+                  {label}
+                </option>
+              ))}
             </select>
           </div>
 

@@ -15,9 +15,9 @@ urlpatterns = [
     path('profile/', ProfileView.as_view(), name="profile"),  # GET
     path('profile/update/', ProfileUpdateView.as_view(), name="profile-update"),  # PUT
     path('logout/', LogoutView.as_view(), name='logout'),  # PUT
-    path('user/verify-otp/', UserVerifyOtpView.as_view(), name='user-verification-otp'),  # POST
-    path('user/resend-otp/', ResendOTPVerificationView.as_view(), name='user-resend-otp'),  # POST
-    path('user/mot-de-passe/oublier/', UserMotDePasseOublieView.as_view(), name='user-mot-de-passe-oublier'),  # POST
-    path('user/mot-de-passe/reset/', UserResetPasswordView.as_view(), name='user-reset-password'),  # POST
+    path('verify-otp/', UserVerifyOtpView.as_view(), name='user-verification-otp'),  # POST
+    path('resend-otp/', ResendOTPVerificationView.as_view(), name='user-resend-otp'),  # POST
+    path('mot-de-passe/oublier/', UserMotDePasseOublieView.as_view(), name='user-mot-de-passe-oublier'),  # POST
+    path('mot-de-passe/reset/', UserResetPasswordView.as_view(), name='user-reset-password'),  # POST
     path('contact-support/', ContactSupportView.as_view(), name='contact-support'),  # POST
 ]

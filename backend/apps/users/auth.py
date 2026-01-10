@@ -40,7 +40,7 @@ class LoginView(APIView):
     serializer_class = LoginSerializer
 
     @swagger_auto_schema(
-        tags=['Admin'],
+        tags=['Users'],
         request_body=LoginSerializer,
         responses={
             200: openapi.Response(
@@ -95,7 +95,7 @@ class RegisterView(APIView):
     serializer_class = RegisterSerializer
 
     @swagger_auto_schema(
-        tags=['Admin'],
+        tags=['Users'],
         request_body=RegisterSerializer,
         responses={
             201: openapi.Response(
@@ -168,7 +168,7 @@ class GoogleCallbackUserView(APIView):
     authentication_classes = []
 
     @swagger_auto_schema(
-        tags=['Admin'],
+        tags=['Users'],
         manual_parameters=[
             openapi.Parameter('code', openapi.IN_QUERY, description="Code d'authentification Google", type=openapi.TYPE_STRING),
             openapi.Parameter('state', openapi.IN_QUERY, description="État de l'authentification", type=openapi.TYPE_STRING),
@@ -330,7 +330,7 @@ class VerifyOtpView(APIView):
     authentication_classes = []
 
     @swagger_auto_schema(
-        tags=['Admin'],
+        tags=['Users'],
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
