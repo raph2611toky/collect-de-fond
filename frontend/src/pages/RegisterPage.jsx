@@ -4,12 +4,20 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useTheme } from "../context/ThemeContext"
 import "../styles/Auth.css"
+import api from "../api/axiosClient";
+
 
 const translations = {
   fr: {
     register: "S'inscrire",
     fullName: "Nom complet",
     email: "Email",
+    phone: "Numéro de téléphone",
+    gender: "Sexe",
+    birthDate: "Date de naissance",
+    male: "Homme",
+    female: "Femme",
+    other: "Autre",
     password: "Mot de passe",
     confirmPassword: "Confirmer le mot de passe",
     terms: "J'accepte les conditions d'utilisation",
@@ -23,6 +31,12 @@ const translations = {
     register: "Mpamatantra",
     fullName: "Anarana",
     email: "Email",
+    phone: "Nomeroen'ny telefona",
+    gender: "Firaisana",
+    birthDate: "Daty nahaterahana",
+    male: "Lahy",
+    female: "Babyfemme",
+    other: "Hafa",
     password: "Tenimiafina",
     confirmPassword: "Ataovy amin-kevitra ny tenimiafina",
     terms: "Tiako ny fepetra fampiasana",
@@ -36,6 +50,12 @@ const translations = {
     register: "Sign Up",
     fullName: "Full Name",
     email: "Email",
+    phone: "Phone Number",
+    gender: "Gender",
+    birthDate: "Birth Date",
+    male: "Male",
+    female: "Female",
+    other: "Other",
     password: "Password",
     confirmPassword: "Confirm Password",
     terms: "I agree to the terms of service",
@@ -47,11 +67,15 @@ const translations = {
   },
 }
 
-export default function RegisterPage() {
+export default function RegisterPage({toast}) {
   const [language, setLanguage] = useState("fr")
+  const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
+    phone: "",
+    gender: "",
+    birthDate: "",
     password: "",
     confirmPassword: "",
     terms: false,
@@ -69,16 +93,54 @@ export default function RegisterPage() {
     })
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (loading) return;
+    setError("");
+
     if (formData.password !== formData.confirmPassword) {
-      setError(t.passwordMismatch)
-      return
+      setError(t.passwordMismatch);
+      toast?.error(t.passwordMismatch);
+      return;
     }
-    if (formData.fullName && formData.email && formData.password && formData.terms) {
-      navigate("/dashboard")
+
+    if (!formData.terms) {
+      const msg = "Veuillez accepter les conditions."
+      setError(msg);
+      toast?.warning(msg);
+      return;
     }
-  }
+
+    try {
+      setLoading(true);
+      const payload = {
+        email: formData.email,
+        password: formData.password,
+        nom_complet: formData.fullName,
+        sexe:
+          formData.gender === "male" ? "M" :
+          formData.gender === "female" ? "F" : "I",
+        date_naissance: formData.birthDate || null,
+        numero_phone: formData.phone,
+      };
+
+      await api.post("/users/register/", payload);
+
+      toast?.success("Inscription réussie. Code envoyé par email.")
+
+      navigate("/verify-otp", { state: { email: formData.email } });
+    } catch (err) {
+      const msg =
+        err?.response?.data?.detail ||
+        err?.response?.data?.message ||
+        "Erreur lors de l'inscription.";
+      setError(msg);
+      toast?.error(msg)
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   const handleGoogleSignup = () => {
     navigate("/dashboard")
@@ -137,6 +199,35 @@ export default function RegisterPage() {
             </div>
 
             <div className="form-group">
+              <label>{t.phone}</label>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="+261 34 00 00 00"
+                required
+              />
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label>{t.gender}</label>
+                <select name="gender" value={formData.gender} onChange={handleChange} required>
+                  <option value="">{t.gender}</option>
+                  <option value="male">{t.male}</option>
+                  <option value="female">{t.female}</option>
+                  <option value="other">{t.other}</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>{t.birthDate}</label>
+                <input type="date" name="birthDate" value={formData.birthDate} onChange={handleChange} required />
+              </div>
+            </div>
+
+            <div className="form-group">
               <label>{t.password}</label>
               <input
                 type="password"
@@ -165,8 +256,8 @@ export default function RegisterPage() {
               {t.terms}
             </label>
 
-            <button type="submit" className="btn-primary-auth">
-              {t.registerButton}
+            <button type="submit" className="btn-primary-auth" disabled={loading}>
+              {loading ? "Inscription..." : t.registerButton}
             </button>
           </form>
 

@@ -36,12 +36,32 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     USERNAME = None
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['nom_complet', 'date_naissance', 'sexe']
+    REQUIRED_FIELDS = ['nom_complet', 'date_naissance', 'sexe', 'numero_phone']
     
     objects = UserManager()
     
     def __str__(self):
         return self.nom_complet
+    
+    def _default_profile_path(self):
+        if self.sexe == 'M':
+            return 'users/profiles/default-man.png'
+        if self.sexe == 'F':
+            return 'users/profiles/default-woman.png'
+        return 'users/profiles/default.png'
+
+    def save(self, *args, **kwargs):
+        if not self.profile:
+            self.profile = self._default_profile_path()
+        else:
+            current = str(self.profile)
+            if current in (
+                'users/profiles/default.png',
+                'users/profiles/anonymous.png',
+            ):
+                self.profile = self._default_profile_path()
+
+        super().save(*args, **kwargs)
     
     class Meta:
         db_table = 'users'

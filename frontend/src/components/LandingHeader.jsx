@@ -1,9 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useTheme } from "../context/ThemeContext"
 import "../styles/LandingHeader.css"
+import api from "../api/axiosClient"
 
 const translations = {
   fr: {
@@ -42,6 +43,7 @@ const translations = {
 }
 
 export default function LandingHeader({ language, setLanguage, onLoginClick, onCreateClick }) {
+  const [profile, setProfile] = useState(null)
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { isDark, toggleTheme } = useTheme()
@@ -51,6 +53,22 @@ export default function LandingHeader({ language, setLanguage, onLoginClick, onC
   const handleLogoClick = () => {
     navigate("/")
   }
+  
+  useEffect(() => {
+    const token = localStorage.getItem("access_token")
+    if (!token) return
+
+    ;(async () => {
+      try {
+        const res = await api.get("/users/profile/")
+        setProfile(res.data)
+      } catch (e) {
+        localStorage.removeItem("access_token")
+        localStorage.removeItem("refresh_token")
+        setProfile(null)
+      }
+    })()
+  }, [])
 
   return (
     <header className={`landing-header ${isDark ? "dark-mode" : "light-mode"}`}>
@@ -140,9 +158,26 @@ export default function LandingHeader({ language, setLanguage, onLoginClick, onC
             )}
           </div>
 
-          <button className="btn-login" onClick={onLoginClick}>
-            {t.login}
-          </button>
+          {profile ? (
+            <button
+              type="button"
+              className="user-avatar-btn"
+              onClick={() => navigate("/profile")}
+              title={profile.nom_complet}
+            >
+              {profile.profile_url ? (
+                <img className="user-avatar-img" src={profile.profile_url} alt={profile.nom_complet} />
+              ) : (
+                <div className="user-avatar-fallback">
+                  {(profile.nom_complet?.trim()?.[0] || "U").toUpperCase()}
+                </div>
+              )}
+            </button>
+          ) : (
+            <button className="btn-login" onClick={onLoginClick}>
+              {t.login}
+            </button>
+          )}
 
           <button className="btn-create-landing" onClick={onCreateClick}>
             {t.create}

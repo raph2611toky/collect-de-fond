@@ -1,10 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useTheme } from "../context/ThemeContext"
 import { useLanguage } from "../context/LanguageContext"
 import "../styles/Header.css"
+import api from "../api/axiosClient"
 
 const translations = {
   mg: {
@@ -39,7 +40,8 @@ const translations = {
   },
 }
 
-export default function Header() {
+export default function Header({toast}) {
+  const [profile, setProfile] = useState(null)
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false)
   const navigate = useNavigate()
@@ -50,6 +52,32 @@ export default function Header() {
   const handleLogoClick = () => {
     navigate("/")
   }
+
+  const handleLogout = async () => {
+    try {
+      const res = await api.put("/users/logout/")
+      localStorage.removeItem("access_token");
+      setProfile(null);
+      setIsUserMenuOpen(false);
+      toast?.success("Déconnexion reussie.");
+      navigate("/login");
+    } catch {
+      setProfile(null)
+    }
+  }
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token")
+    if (!token) return;
+    (async () => {
+      try {
+        const res = await api.get("/users/profile/")
+        setProfile(res.data)
+      } catch {
+        setProfile(null)
+      }
+    })()
+  }, [])
 
   return (
     <header className="header">
@@ -66,7 +94,7 @@ export default function Header() {
 
         <div className="header-middle">
           <div className="search-wrapper">
-            <input type="text" className="search-input" placeholder={t.search} />
+            <input type="text" className={`search-input ${isDark ? "dark-mode" : ""}`} placeholder={t.search} />
             <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <circle cx="11" cy="11" r="8"></circle>
               <path d="m21 21-4.35-4.35"></path>
@@ -85,7 +113,7 @@ export default function Header() {
             </button>
 
             {isLangMenuOpen && (
-              <div className="lang-menu">
+              <div className={`lang-menu ${!isDark ? "light-mode" : ""}`}>
                 <button
                   onClick={() => {
                     setLanguage("mg")
@@ -117,14 +145,18 @@ export default function Header() {
           <div className="user-menu-wrapper">
             <button
               className="user-menu-toggle"
-              onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+              // onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
               title="User profile"
             >
-              👤
+              {profile?.profile_url ? (
+                <img className="user-avatar-img" src={profile.profile_url} alt={profile.nom_complet} onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} />
+              ) : (
+                <div className="user-avatar" onClick={() => navigate('/login')}>👤</div>
+              )}
             </button>
 
             {isUserMenuOpen && (
-              <div className="user-menu">
+              <div className={`user-menu ${!isDark ? "light-mode" : ""}`}>
                 <button
                   onClick={() => {
                     navigate("/profile")
@@ -143,10 +175,7 @@ export default function Header() {
                 </button>
                 <hr />
                 <button
-                  onClick={() => {
-                    navigate("/login")
-                    setIsUserMenuOpen(false)
-                  }}
+                  onClick={() => handleLogout()}
                   className="logout-btn"
                 >
                   🚪 {t.logout}

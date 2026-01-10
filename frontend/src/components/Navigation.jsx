@@ -2,6 +2,7 @@
 
 import { useLanguage } from "../context/LanguageContext"
 import "../styles/Navigation.css"
+import { useTheme } from "../context/ThemeContext"
 
 const translations = {
   mg: {
@@ -24,6 +25,7 @@ const translations = {
 export default function Navigation({ currentPage, setCurrentPage, translations: navTranslations }) {
   const { language } = useLanguage()
   const t = navTranslations || translations[language]
+  const { isDark, toggleTheme } = useTheme()
 
   const navItems = [
     { id: "home", label: t.home, icon: "📋" },
@@ -32,8 +34,8 @@ export default function Navigation({ currentPage, setCurrentPage, translations: 
   ]
 
   return (
-    <nav className="navigation">
-      <div className="nav-container">
+    <nav className={`navigation ${isDark ? 'dark-mode' : ''}`}>
+      <div className={`nav-container ${isDark ? 'dark-mode' : ''}`}>
         {navItems.map((item) => (
           <button
             key={item.id}

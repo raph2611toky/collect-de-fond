@@ -1,3 +1,9 @@
+:root {
+  --dark-bg: #0f172a;
+  --dark-bg-input: rgb(17, 27, 47);
+  --dark-bg-form: #141f37;
+}
+
 .auth-page {
   min-height: 100vh;
   display: flex;
@@ -19,7 +25,7 @@
 /* Simplified container to center content properly */
 .auth-container-centered {
   width: 100%;
-  max-width: 450px;
+  max-width: 600px; /* Updated from 450px */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -29,6 +35,7 @@
   width: 100%;
   padding: 2.5rem;
   border-radius: 1rem;
+  background-color: var(--dark-bg-form);
 }
 
 .auth-page.light-mode .auth-form-wrapper {
@@ -38,7 +45,7 @@
 }
 
 .auth-page.dark-mode .auth-form-wrapper {
-  background: #374151;
+  /* background: #374151; */
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   border: 1px solid #4b5563;
 }
@@ -101,6 +108,19 @@
   gap: 1.25rem;
 }
 
+/* Added grid layout for two-column form fields */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-row .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .form-group {
   display: flex;
   flex-direction: column;
@@ -112,7 +132,7 @@
   font-weight: 600;
 }
 
-.form-group input {
+.form-group input, .form-group select {
   padding: 0.75rem 1rem;
   border: 1px solid;
   border-radius: 0.5rem;
@@ -120,25 +140,25 @@
   transition: border-color 0.3s ease;
 }
 
-.auth-page.light-mode .form-group input {
+.auth-page.light-mode .form-group input, .auth-page.light-mode .form-group select {
   background: white;
   border-color: #d1d5db;
   color: #1f2937;
 }
 
-.auth-page.light-mode .form-group input:focus {
+.auth-page.light-mode .form-group input:focus, .auth-page.light-mode .form-group select:focus {
   outline: none;
   border-color: #10b981;
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
 }
 
-.auth-page.dark-mode .form-group input {
+.auth-page.dark-mode .form-group input, .auth-page.dark-mode .form-group select {
   background: #1f2937;
   border-color: #4b5563;
   color: #f3f4f6;
 }
 
-.auth-page.dark-mode .form-group input:focus {
+.auth-page.dark-mode .form-group input:focus, .auth-page.dark-mode .form-group select:focus {
   outline: none;
   border-color: #10b981;
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
@@ -367,6 +387,10 @@
 }
 
 @media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
   .auth-form-wrapper {
     padding: 2rem;
   }

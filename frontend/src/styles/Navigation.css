@@ -1,5 +1,5 @@
 .navigation {
-  background: linear-gradient(90deg, var(--color-bg, #ffffff) 0%, var(--color-bg-secondary, #f5f5f5) 100%);
+  /* background: linear-gradient(90deg, var(--color-bg, #ffffff) 0%, var(--color-bg-secondary, #f5f5f5) 100%); */
   border-bottom: 1px solid var(--color-border, #e0e0e0);
   padding: 0;
   position: sticky;
@@ -9,8 +9,8 @@
 }
 
 /* Dark mode support for navigation */
-.dashboard-container.dark-mode .navigation {
-  background: linear-gradient(90deg, #1a1a1a 0%, #252525 100%);
+.dashboard-container.dark-mode .navigation.dark-mode {
+  background: var(--color-bg-secondary);
   border-bottom-color: #444;
 }
 
@@ -20,8 +20,12 @@
   padding: 0 2rem;
   display: flex;
   gap: 0.5rem;
+  background-color: var(--toast-bg);
 }
 
+.nav-container.dark-mode {
+  background-color: var(--color-bg-secondary);
+}
 .nav-item {
   display: flex;
   align-items: center;

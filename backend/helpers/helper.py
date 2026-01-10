@@ -31,7 +31,9 @@ def get_timezone():
 
 
 def enc_dec(plaintext, type='e'):
-    cipher = Cipher(algorithms.AES(os.getenv('AES_KEY').encode()), modes.CFB(os.getenv('AES_IV').encode()), backend=default_backend())
+    key=f'{os.getenv("AES_KEY")*32}'[:32]
+    iv=f'{os.getenv("AES_IV")*16}'[:16]
+    cipher = Cipher(algorithms.AES(key.encode()), modes.CFB(iv.encode()), backend=default_backend())
     if type == 'e':
         encryptor = cipher.encryptor()
         ciphertext = encryptor.update(plaintext.encode()) + encryptor.finalize()

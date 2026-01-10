@@ -5,7 +5,6 @@
   width: 100%;
 }
 
-/* Added header section with create button */
 .list-header {
   display: flex;
   justify-content: space-between;
@@ -58,7 +57,6 @@
   font-weight: 600;
 }
 
-/* Dark mode styling for header */
 .dashboard-container.dark-mode .list-header {
   border-bottom-color: rgba(46, 204, 113, 0.3);
 }
@@ -90,22 +88,16 @@
   align-items: center;
   gap: 0.6rem;
   padding: 0.8rem 1.5rem;
-  background: white;
-  border: 1px solid #e0e0e0;
+  /* Use CSS variables for light mode compatibility */
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
-  color: #666;
+  color: var(--color-text-secondary);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
   font-family: inherit;
-}
-
-/* Dark mode button styling */
-.dashboard-container.dark-mode .category-btn {
-  background: #252525;
-  border-color: #444;
-  color: #999;
 }
 
 .category-btn:hover {

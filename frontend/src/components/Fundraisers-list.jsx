@@ -6,7 +6,6 @@ import FundraiserCard from "./Fundraiser-card"
 import "../styles/Fundraisers-list.css"
 import { useEffect, useState } from "react";
 import fundraisers from "../data/fundraiser-list.json";
-console.log(fundraisers);
 
 const translations = {
   mg: {

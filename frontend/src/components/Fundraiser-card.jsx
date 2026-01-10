@@ -1,5 +1,5 @@
 "use client"
-
+import { useTheme } from "../context/ThemeContext"
 import "../styles/Fundraiser-card.css"
 
 const translations = {
@@ -11,9 +11,10 @@ const translations = {
 export default function FundraiserCard({ fundraiser, language }) {
   const progressPercent = (fundraiser.raised / fundraiser.goal) * 100
   const t = translations[language]
+  const { isDark, toggleTheme } = useTheme()
 
   return (
-    <div className="fundraiser-card">
+    <div className={`fundraiser-card ${isDark ? 'dark-mode' : ''}`}>
       <div className="card-image">
         <img src={fundraiser.image || "/placeholder.svg"} alt={fundraiser.title} />
         <div className="card-badge">{fundraiser.category}</div>

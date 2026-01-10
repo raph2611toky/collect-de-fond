@@ -10,7 +10,7 @@ import CreateFundraiser from "../components/Create-fundraiser"
 import ProfilePage from "../components/Profile-page"
 import "../styles/Dashboard.css"
 
-export default function DashboardPage() {
+export default function DashboardPage({toast}) {
   const [currentPage, setCurrentPage] = useState("home")
   const { isDark } = useTheme()
   const { language } = useLanguage()
@@ -49,7 +49,7 @@ export default function DashboardPage() {
 
   return (
     <div className={`dashboard-container ${isDark ? "dark-mode" : "light-mode"}`}>
-      <Header />
+      <Header toast={toast} />
       <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} translations={translations[language]} />
       <main className="main-content">{renderPage()}</main>
 

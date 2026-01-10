@@ -383,9 +383,12 @@ class UserMotDePasseOublieView(APIView):
             user = User.objects.filter(email=email).first()
             if not user:
                 return Response({"erreur": "Utilisateur introuvable"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            print({f'{enc_dec("user_id")}': f'{enc_dec(str(user.id))}'})
 
-            token = generate_jwt_token({enc_dec("user_id"): enc_dec(str(user.id))})
-            lien = os.getenv('SITE_URL') + f"/user/reset-password?token={token}"
+            token = generate_jwt_token({f'{enc_dec("user_id")}': f'{enc_dec(str(user.id))}'})
+            print(token)
+            lien = os.getenv('SITE_URL') + f"/reset-password?token={token}"
 
             envoyer_email([email], "reinitialiser_mot_de_passe", {
                 "subject": "Réinitialisation de votre mot de passe",
@@ -455,7 +458,7 @@ class UserResetPasswordView(APIView):
                 return Response({"erreur": "Token et nouveau mot de passe requis"}, status=status.HTTP_400_BAD_REQUEST)
 
             payload = decode_jwt_token(token)
-            user_id = int(enc_dec(payload.get(enc_dec("user_id", "d")), 'd'))
+            user_id = int(enc_dec(payload.get(enc_dec("user_id")), 'd'))
 
             user = User.objects.get(id=user_id)
             user.set_password(nouveau_mot_de_passe)

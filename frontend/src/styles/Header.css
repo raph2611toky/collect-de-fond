@@ -5,18 +5,54 @@
   --secondary: #14b8a6;
   --secondary-light: #2dd4bf;
   --bg-dark: #0f172a;
+  --dark-bg: #0f172a;
+  --dark-bg-input: rgb(17, 27, 47);
+  --dark-bg-form: #141f37;
   --color-bg-secondary: #151e2b;
   --bg-card: #1e293b;
   --text-primary: #ffffff;
   --text-secondary: #cbd5e1;
   --border-color: rgba(148, 163, 184, 0.2);
   --color-primary: #6366f1;
+  --color-bg-secondary-light: #f8fafc;
+}
+
+/* Add light mode color definitions */
+.app-container.light-mode {
+  --color-bg: #ffffff;
+  --color-bg-secondary: #f8fafc;
+  --color-bg-tertiary: #f1f5f9;
+  --color-text: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-border: #e2e8f0;
+  --color-border-light: #cbd5e1;
+}
+
+.app-container.dark-mode {
+  --color-bg: #0f172a;
+  --color-bg-secondary: #1e293b;
+  --color-bg-tertiary: #334155;
+  --color-text: #f1f5f9;
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #94a3b8;
+  --color-border: #475569;
+  --color-border-light: #64748b;
+}
+
+.user-avatar-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  object-fit: cover;
+  display: block;
 }
 
 .header {
   position: sticky;
   top: 0;
   z-index: 1000;
+  /* Use CSS variables instead of hardcoded colors */
   background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-secondary) 100%);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--color-border);
@@ -65,7 +101,7 @@
   height: 56px;
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(20, 184, 166, 0.2) 100%);
   border-radius: 12px;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--color-border);
   transition: all 0.3s ease;
 }
 
@@ -92,7 +128,7 @@
 
 .logo-subtitle {
   font-size: 0.75rem;
-  color: var(--color-secondary-light);
+  color: var(--color-text-secondary);
   margin: 0;
   font-weight: 500;
   text-transform: uppercase;
@@ -114,14 +150,18 @@
 .search-input {
   width: 100%;
   padding: 0.75rem 1rem 0.75rem 2.5rem;
-  background: var(--color-bg-secondary);
+  /* Use CSS variables for input background and text colors */
+  
   border: 1px solid var(--color-border);
   border-radius: 8px;
   color: var(--color-text);
   font-size: 0.9rem;
   transition: all 0.3s ease;
   font-family: inherit;
-  border-color: var(--color-primary);
+}
+
+.search-input.dark-mode {
+  background: var(--color-bg-secondary);
 }
 
 .search-input::placeholder {
@@ -152,7 +192,6 @@
   gap: 1.5rem;
 }
 
-/* Added theme toggle button */
 .theme-toggle {
   display: flex;
   align-items: center;
@@ -182,7 +221,7 @@
 }
 
 .theme-toggle:hover svg {
-  color: white;
+  color: var(--color-text);
 }
 
 /* Language Selector */
@@ -226,9 +265,13 @@
   border: 1px solid var(--color-border);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
   min-width: 180px;
   animation: slideDown 0.3s ease;
+}
+
+.lang-menu.light-mode {
+  background-color: var(--color-bg-secondary-light);
 }
 
 .lang-menu button {
@@ -265,7 +308,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.6rem;
   background: transparent;
   border: 1px solid var(--color-border);
   border-radius: 8px;
@@ -292,10 +334,14 @@
   border: 1px solid var(--color-border);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
   min-width: 200px;
   animation: slideDown 0.3s ease;
   z-index: 1001;
+}
+
+.user-menu.light-mode {
+  background-color: var(--color-bg-secondary-light);
 }
 
 .user-menu button {
@@ -356,7 +402,6 @@
   width: 32px;
   height: 32px;
   border-radius: 6px;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
   display: flex;
   align-items: center;
   justify-content: center;

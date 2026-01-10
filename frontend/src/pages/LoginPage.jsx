@@ -1,9 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useTheme } from "../context/ThemeContext"
 import "../styles/Auth.css"
+import api from "../api/axiosClient";
 
 const translations = {
   fr: {
@@ -44,7 +45,7 @@ const translations = {
   },
 }
 
-export default function LoginPage() {
+export default function LoginPage({ toast }) {
   const [language, setLanguage] = useState("fr")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -52,15 +53,34 @@ export default function LoginPage() {
   const { isDark, toggleTheme } = useTheme()
   const navigate = useNavigate()
   const t = translations[language]
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (email && password) {
-      navigate("/dashboard")
-    } else {
-      setError(t.error)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (loading) return
+    setError("");
+
+    try {
+      setLoading(true)
+      const res = await api.post("/users/login/", { email, password });
+      
+      if (res.data?.access) localStorage.setItem("access_token", res.data.access);
+      if (res.data?.refresh) localStorage.setItem("refresh_token", res.data.refresh);
+
+      toast?.success("Connexion réussie.");
+      navigate("/dashboard");
+    } catch (err) {
+      const msg =
+        err?.response?.data?.detail ||
+        err?.response?.data?.message ||
+        t.error;
+
+      setError(msg);
+      toast?.error(msg)
+    } finally {
+      setLoading(false)
     }
-  }
+  };
 
   const handleGoogleLogin = () => {
     navigate("/dashboard")
@@ -121,13 +141,13 @@ export default function LoginPage() {
                 <input type="checkbox" />
                 {t.rememberMe}
               </label>
-              <a href="#forgot" className="forgot-link">
+              <a href="/forgot-password" className="forgot-link" onClick={(e) => { e.preventDefault(); navigate("/forgot-password") }}>
                 {t.forgotPassword}
               </a>
             </div>
 
-            <button type="submit" className="btn-primary-auth">
-              {t.loginButton}
+            <button type="submit" className="btn-primary-auth" disabled={loading}>
+              {loading ? "Connexion..." : t.loginButton}
             </button>
           </form>
 
