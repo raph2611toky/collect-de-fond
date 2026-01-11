@@ -1,3 +1,11 @@
+:root {
+  --color-text-dark: #eceeef;
+  --border-dark: #f9f6f6d7;
+  --background-card-dark: #faf4f4;
+  --dark-bg-form: #141f37;
+  --dark-bg-input: rgb(17, 27, 47);
+}
+
 .fundraiser-card {
   border: 1px solid var(--color-border);
   border-radius: 12px;
@@ -31,6 +39,57 @@
   background: var(--color-bg);
 }
 
+/* Adding card actions positioning and dark/light mode */
+.card-actions {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.card-action-btn {
+  padding: 0.6rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+}
+
+.card-action-btn.light-mode {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--color-border);
+}
+
+.card-action-btn.dark-mode {
+  background: rgba(20, 31, 55, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-action-btn:hover {
+  transform: scale(1.1);
+}
+
+.card-action-btn.edit-btn:hover {
+  background: #3498db;
+  color: white;
+}
+
+.card-action-btn.delete-btn:hover {
+  background: #e74c3c;
+  color: white;
+}
+
+/* Making card-image position relative for absolute positioning of actions */
 .card-image {
   position: relative;
   width: 100%;
@@ -63,12 +122,29 @@
   text-transform: capitalize;
 }
 
+/* Card badge dark/light mode */
+.card-badge.light-mode {
+  background: linear-gradient(135deg, #6366f1, #14b8a6);
+  color: white;
+}
+
+.card-badge.dark-mode {
+  background: linear-gradient(135deg, #6366f1, #14b8a6);
+  color: white;
+}
+
 .card-content {
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   flex: 1;
+  background-color: var(--background-card-dark);
+}
+
+.card-content.dark-mode {
+  background: var(--dark-bg-form);
+  color: var(--color-text-dark);
 }
 
 .card-title {
@@ -181,6 +257,17 @@
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: inherit;
+}
+
+/* Donate button dark/light mode */
+.donate-btn.light-mode {
+  background: linear-gradient(135deg, #6366f1 0%, #14b8a6 100%);
+  color: white;
+}
+
+.donate-btn.dark-mode {
+  background: linear-gradient(135deg, #6366f1 0%, #14b8a6 100%);
+  color: white;
 }
 
 .donate-btn:hover {

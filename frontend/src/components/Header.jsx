@@ -17,6 +17,7 @@ const translations = {
     profile: "Aking Profilo",
     logout: "Logout",
     settings: "Fafana",
+    myFundraisers: "Ny Fampandrosoana Mia",
   },
   fr: {
     title: "Fanampiana",
@@ -27,6 +28,7 @@ const translations = {
     profile: "Mon Profil",
     logout: "Déconnexion",
     settings: "Paramètres",
+    myFundraisers: "Mes Fampandrosoana",
   },
   en: {
     title: "Fanampiana",
@@ -37,10 +39,11 @@ const translations = {
     profile: "My Profile",
     logout: "Logout",
     settings: "Settings",
+    myFundraisers: "My Fundraisers",
   },
 }
 
-export default function Header({toast}) {
+export default function Header({ toast }) {
   const [profile, setProfile] = useState(null)
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false)
@@ -56,11 +59,11 @@ export default function Header({toast}) {
   const handleLogout = async () => {
     try {
       const res = await api.put("/users/logout/")
-      localStorage.removeItem("access_token");
-      setProfile(null);
-      setIsUserMenuOpen(false);
-      toast?.success("Déconnexion reussie.");
-      navigate("/login");
+      localStorage.removeItem("access_token")
+      setProfile(null)
+      setIsUserMenuOpen(false)
+      toast?.success("Déconnexion reussie.")
+      navigate("/login")
     } catch {
       setProfile(null)
     }
@@ -68,8 +71,8 @@ export default function Header({toast}) {
 
   useEffect(() => {
     const token = localStorage.getItem("access_token")
-    if (!token) return;
-    (async () => {
+    if (!token) return
+    ;(async () => {
       try {
         const res = await api.get("/users/profile/")
         setProfile(res.data)
@@ -81,7 +84,7 @@ export default function Header({toast}) {
 
   return (
     <header className="header">
-      <div className="header-container">
+      <div className={`header-container ${isDark ? "dark-mode" : ""}`}>
         <div className="header-left">
           <div className="logo-section" onClick={handleLogoClick} style={{ cursor: "pointer" }}>
             <div className="logo-icon">❤️</div>
@@ -93,7 +96,7 @@ export default function Header({toast}) {
         </div>
 
         <div className="header-middle">
-          <div className="search-wrapper">
+          <div className={`search-bar ${isDark ? "dark-mode" : ""}`}>
             <input type="text" className={`search-input ${isDark ? "dark-mode" : ""}`} placeholder={t.search} />
             <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <circle cx="11" cy="11" r="8"></circle>
@@ -149,9 +152,16 @@ export default function Header({toast}) {
               title="User profile"
             >
               {profile?.profile_url ? (
-                <img className="user-avatar-img" src={profile.profile_url} alt={profile.nom_complet} onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} />
+                <img
+                  className="user-avatar-img"
+                  src={profile.profile_url || "/placeholder.svg"}
+                  alt={profile.nom_complet}
+                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                />
               ) : (
-                <div className="user-avatar" onClick={() => navigate('/login')}>👤</div>
+                <div className="user-avatar" onClick={() => navigate("/login")}>
+                  👤
+                </div>
               )}
             </button>
 
@@ -167,6 +177,14 @@ export default function Header({toast}) {
                 </button>
                 <button
                   onClick={() => {
+                    navigate("/my-fundraisers")
+                    setIsUserMenuOpen(false)
+                  }}
+                >
+                  🚪 {t.myFundraisers}
+                </button>
+                <button
+                  onClick={() => {
                     navigate("/settings")
                     setIsUserMenuOpen(false)
                   }}
@@ -174,10 +192,7 @@ export default function Header({toast}) {
                   ⚙️ {t.settings}
                 </button>
                 <hr />
-                <button
-                  onClick={() => handleLogout()}
-                  className="logout-btn"
-                >
+                <button onClick={() => handleLogout()} className="logout-btn">
                   🚪 {t.logout}
                 </button>
               </div>

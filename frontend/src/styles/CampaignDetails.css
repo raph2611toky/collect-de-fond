@@ -45,12 +45,23 @@
   color: var(--dark-text);
 }
 
+.campaign-details-container .back-btn.light-mode {
+  border-color: var(--border-color);
+  color: var(--light-text);
+  background-color: var(--light-bg);
+}
+
 .back-btn:hover {
   background-color: var(--primary-green);
   color: white;
   border-color: var(--primary-green);
 }
 
+.campaign-details-container .back-btn.light-mode:hover {
+  background-color: var(--primary-green);
+  color: white;
+  border-color: var(--primary-green);
+}
 .campaign-header {
   display: grid;
   grid-template-columns: 1fr 1fr;

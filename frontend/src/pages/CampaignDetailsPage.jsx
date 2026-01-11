@@ -1,25 +1,28 @@
 "use client"
 
-import { useParams, useNavigate } from "react-router-dom"
-import { useEffect, useMemo, useState } from "react"
+import { useSearchParams, useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react"
 import { useTheme } from "../context/ThemeContext"
 import { useLanguage } from "../context/LanguageContext"
+import { useToast } from "../hooks/useToast"
+import { decryptId } from "../hooks/encryption"
 import Header from "../components/Header"
 import RichTextEditor from "../components/RichTextEditor"
-import fundraisers from "../data/fundraiser-list.json"
+import api from "../api/axiosClient"
 import "../styles/CampaignDetails.css"
 
 export default function CampaignDetailsPage() {
-  const { id } = useParams()
+  const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const { isDark } = useTheme()
   const { language } = useLanguage()
+  const toast = useToast()
   const [activeTab, setActiveTab] = useState("details")
   const [updates, setUpdates] = useState([])
   const [showAllParticipants, setShowAllParticipants] = useState(false)
-  const campaignId = useMemo(() => Number(id), [id])
-
   const [campaign, setCampaign] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [newUpdate, setNewUpdate] = useState("")
   const [showUpdateForm, setShowUpdateForm] = useState(false)
   const [updateImage, setUpdateImage] = useState(null)
@@ -58,6 +61,10 @@ export default function CampaignDetailsPage() {
       copy_link: "Copier le lien",
       copied: "Lien copié !",
       mobilize: "Mobilisez du monde !",
+      loading: "Chargement...",
+      error_load: "Erreur lors du chargement de la campagne",
+      not_found: "Campagne non trouvée",
+      invalid_link: "Le lien n'est pas valide",
     },
     mg: {
       details: "Lisitera",
@@ -91,6 +98,10 @@ export default function CampaignDetailsPage() {
       copy_link: "Kopia ny rohy",
       copied: "Ny rohy dia nokopya !",
       mobilize: "Mobilisez mpiara-maso!",
+      loading: "Mitaky...",
+      error_load: "Diso tamin'ny fetran'ny kampania",
+      not_found: "Tsy hitatra ny kampania",
+      invalid_link: "Ny rohy dia tsy manara",
     },
     en: {
       details: "Details",
@@ -124,23 +135,80 @@ export default function CampaignDetailsPage() {
       copy_link: "Copy link",
       copied: "Link copied !",
       mobilize: "Mobilize people!",
+      loading: "Loading...",
+      error_load: "Error loading campaign",
+      not_found: "Campaign not found",
+      invalid_link: "The link is not valid",
     },
   }
 
   const t = translations[language]
 
   useEffect(() => {
-    const found = fundraisers.find((c) => Number(c.id) === campaignId)
-    setCampaign(found || null)
-    if (found) {
-      setUpdates(found.updates || [])
+    const fetchCampaign = async () => {
+      try {
+        setLoading(true)
+        const encryptedId = searchParams.get("id")
+        if (!encryptedId) {
+          setError(t.invalid_link)
+          toast.showToast(t.invalid_link, "error")
+          return
+        }
+
+        const decryptedId = decryptId(encryptedId)
+        if (!decryptedId) {
+          setError(t.invalid_link)
+          toast.showToast(t.invalid_link, "error")
+          return
+        }
+
+        const response = await api.get(`/fundraisers/fundraisers/${decryptedId}/`)
+        if (response.data.success && response.data.data) {
+          setCampaign(response.data.data)
+          setError(null)
+        } else {
+          setError(t.error_load)
+          toast.showToast(t.error_load, "error")
+        }
+      } catch (err) {
+        console.error("[v0] Error fetching campaign:", err.message)
+        setError(t.error_load)
+        toast.showToast(t.error_load, "error")
+      } finally {
+        setLoading(false)
+      }
     }
-  }, [campaignId])
 
-  if (!campaign) return <div className="campaign-details-container">Campaign not found</div>
+    fetchCampaign()
+  }, [searchParams, language])
 
-  const percentage = (campaign.raised / campaign.goal) * 100
-  const displayedDonations = showAllParticipants ? campaign.donations : campaign.donations.slice(0, 5)
+  if (loading) {
+    return (
+      <div className={`campaign-details ${isDark ? "dark-mode" : "light-mode"}`}>
+        <Header />
+        <div className="campaign-details-container loading-container">
+          <p>{t.loading}</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !campaign) {
+    return (
+      <div className={`campaign-details ${isDark ? "dark-mode" : "light-mode"}`}>
+        <Header />
+        <div className="campaign-details-container error-container">
+          <button className={`back-btn ${isDark ? "" : "light-mode"}`} onClick={() => navigate(-1)}>
+            ← {t.back}
+          </button>
+          <p className="error-message">{error || t.not_found}</p>
+        </div>
+      </div>
+    )
+  }
+
+  const percentage = (campaign.montant_collecte / campaign.objectif) * 100
+  const displayedDonations = showAllParticipants ? [] : []
 
   const handleAddUpdate = () => {
     if (newUpdate.trim()) {
@@ -173,9 +241,72 @@ export default function CampaignDetailsPage() {
   }
 
   const handleCopyLink = () => {
-    const url = `${window.location.origin}/campaign/${id}`
+    const encryptedId = searchParams.get("id")
+    const url = `${window.location.origin}/campaign/profile?id=${encryptedId}`
     navigator.clipboard.writeText(url)
-    alert(t.copied)
+    toast.showToast(t.copied, "success")
+  }
+
+  const handleDonate = () => {
+    const encryptedId = searchParams.get("id")
+    navigate(`/campaign/profile/donate?id=${encryptedId}`)
+  }
+
+  const renderDescription = (text) => {
+    if (!text) return ""
+
+    return text.split("\n").map((line, idx) => {
+      line = line.trim()
+      if (!line) return <br key={idx} />
+
+      // Handle headers
+      if (line.startsWith("###")) {
+        return (
+          <h3 key={idx} className="markdown-h3">
+            {line.replace(/^###\s*/, "")}
+          </h3>
+        )
+      }
+      if (line.startsWith("##")) {
+        return (
+          <h2 key={idx} className="markdown-h2">
+            {line.replace(/^##\s*/, "")}
+          </h2>
+        )
+      }
+      if (line.startsWith("#")) {
+        return (
+          <h1 key={idx} className="markdown-h1">
+            {line.replace(/^#\s*/, "")}
+          </h1>
+        )
+      }
+
+      // Handle bold
+      if (line.includes("**")) {
+        const parts = line.split(/\*\*(.*?)\*\*/g)
+        return (
+          <p key={idx} className="markdown-p">
+            {parts.map((part, i) => (i % 2 === 1 ? <strong key={i}>{part}</strong> : part))}
+          </p>
+        )
+      }
+
+      // Handle lists
+      if (line.startsWith("- ") || line.startsWith("* ")) {
+        return (
+          <li key={idx} className="markdown-li">
+            {line.replace(/^[-*]\s*/, "")}
+          </li>
+        )
+      }
+
+      return (
+        <p key={idx} className="markdown-p">
+          {line}
+        </p>
+      )
+    })
   }
 
   return (
@@ -183,25 +314,29 @@ export default function CampaignDetailsPage() {
       <Header />
 
       <div className="campaign-details-container">
-        <button className="back-btn" onClick={() => navigate(-1)}>
+        <button className={`back-btn ${isDark ? "" : "light-mode"}`} onClick={() => navigate(-1)}>
           ← {t.back}
         </button>
 
         <div className="campaign-header">
           <div className="campaign-image-section">
-            <img src={campaign.image || "/placeholder.svg"} alt={campaign.title} className="campaign-main-image" />
+            <img src={campaign.image_url || "/placeholder.svg"} alt={campaign.titre} className="campaign-main-image" />
           </div>
 
           <div className="campaign-stats-section">
-            <h1>{campaign.title}</h1>
+            <h1>{campaign.titre}</h1>
             <p className="creator-name">
-              {t.created_by} {campaign.creator}
+              {t.created_by} {campaign.createur?.nom_complet || "Inconnu"}
             </p>
 
             <div className="stats-box">
-              <div className="stat-value">{(campaign.raised / 1000).toFixed(0)} €</div>
+              <div className="stat-value">
+                {campaign.masquer_le_montant
+                  ? "---"
+                  : `${(campaign.montant_collecte / 1000).toFixed(0)} ${campaign.devise}`}
+              </div>
               <div className="stat-label">
-                {t.raised} {campaign.donors} {t.donors}
+                {t.raised} {campaign.nombre_donateurs} {t.donors}
               </div>
 
               <div className="progress-bar">
@@ -213,12 +348,8 @@ export default function CampaignDetailsPage() {
                 <span>{t.platform_secure}</span>
               </div>
 
-              <button
-                className="donate-btn"
-                onClick={() => navigate(`/campaign/${id}/donate`)}
-                disabled={campaign.status === "closed"}
-              >
-                {campaign.status === "closed" ? t.closed : t.donate_btn}
+              <button className="donate-btn" onClick={handleDonate} disabled={!campaign.est_active}>
+                {!campaign.est_active ? t.closed : t.donate_btn}
               </button>
             </div>
           </div>
@@ -241,7 +372,7 @@ export default function CampaignDetailsPage() {
             className={`tab-btn ${activeTab === "participants" ? "active" : ""}`}
             onClick={() => setActiveTab("participants")}
           >
-            👥 {t.participants} ({campaign.donors})
+            👥 {t.participants} ({campaign.nombre_donateurs})
           </button>
         </div>
 
@@ -250,27 +381,27 @@ export default function CampaignDetailsPage() {
             <>
               <section className="details-section">
                 <h2>{t.description}</h2>
-                {campaign.videoUrl && (
+                {campaign.video_url && (
                   <div className="video-container">
                     <iframe
                       width="100%"
                       height="400"
-                      src={campaign.videoUrl}
-                      title={campaign.title}
+                      src={campaign.video_url}
+                      title={campaign.titre}
                       frameBorder="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                     ></iframe>
                   </div>
                 )}
-                <div className="description-content">
-                  <p>{campaign.description}</p>
-                </div>
+                <div className="description-content markdown-readme">{renderDescription(campaign.description)}</div>
 
                 <div className="details-info-grid">
                   <div className="detail-card">
                     <h3>{t.goal}</h3>
-                    <p className="detail-value">{(campaign.goal / 1000).toFixed(0)} €</p>
+                    <p className="detail-value">
+                      {(campaign.objectif / 1000).toFixed(1)}K {campaign.devise}
+                    </p>
                   </div>
                   <div className="detail-card">
                     <h3>{t.progress}</h3>
@@ -278,33 +409,35 @@ export default function CampaignDetailsPage() {
                   </div>
                   <div className="detail-card">
                     <h3>{t.status}</h3>
-                    <p className="detail-value detail-status-closed">
-                      {campaign.status === "closed" ? t.closed : "Actif"}
-                    </p>
+                    <p className="detail-value detail-status-closed">{!campaign.est_active ? t.closed : "Actif"}</p>
                   </div>
                   <div className="detail-card">
                     <h3>{t.donors}</h3>
-                    <p className="detail-value">{campaign.donors}</p>
+                    <p className="detail-value">{campaign.nombre_donateurs}</p>
                   </div>
                 </div>
 
                 <section className="recent-donations-section">
                   <h3>{t.recent_donations}</h3>
                   <div className="donations-cards">
-                    {displayedDonations.map((donation) => (
-                      <div key={donation.id} className="donation-card">
-                        <div className="donation-card-amount">
-                          {donation.isAnonymous ? t.private : `+${donation.amount} €`}
+                    {displayedDonations.length > 0 ? (
+                      displayedDonations.map((donation) => (
+                        <div key={donation.id} className="donation-card">
+                          <div className="donation-card-amount">
+                            {donation.isAnonymous ? t.private : `+${donation.amount} ${campaign.devise}`}
+                          </div>
+                          <div className="donation-card-info">
+                            <div className="donor-name">{donation.isAnonymous ? t.anonymous : donation.name}</div>
+                            {donation.description && <div className="donor-description">{donation.description}</div>}
+                          </div>
+                          <div className="donation-card-date">{donation.date}</div>
                         </div>
-                        <div className="donation-card-info">
-                          <div className="donor-name">{donation.isAnonymous ? t.anonymous : donation.name}</div>
-                          {donation.description && <div className="donor-description">{donation.description}</div>}
-                        </div>
-                        <div className="donation-card-date">{donation.date}</div>
-                      </div>
-                    ))}
+                      ))
+                    ) : (
+                      <p style={{ textAlign: "center", opacity: 0.6 }}>Aucune donation pour le moment</p>
+                    )}
                   </div>
-                  {!showAllParticipants && campaign.donations.length > 5 && (
+                  {!showAllParticipants && displayedDonations.length > 5 && (
                     <button className="show-more-btn" onClick={() => setShowAllParticipants(true)}>
                       {t.show_more}
                     </button>
@@ -322,7 +455,7 @@ export default function CampaignDetailsPage() {
                     </button>
                     <button className="share-btn twitter">
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M23.953 4.57a10 10 0 002.856-3.515 10 10 0 01-2.836.779 4.933 4.933 0 002.16-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
+                        <path d="M23.953 4.57a10 10 0 002.856-3.515 10 10 0 01-2.836.779 4.933 4.933 0 002.16-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417a9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
                       </svg>
                       {t.share_twitter}
                     </button>
@@ -337,7 +470,11 @@ export default function CampaignDetailsPage() {
                   <div className="copy-link-section">
                     <label>{t.copy_link}:</label>
                     <div className="copy-link-input">
-                      <input type="text" value={`${window.location.origin}/campaign/${id}`} readOnly />
+                      <input
+                        type="text"
+                        value={`${window.location.origin}/campaign/profile?id=${searchParams.get("id")}`}
+                        readOnly
+                      />
                       <button onClick={handleCopyLink} className="copy-btn">
                         {t.copy_link}
                       </button>
@@ -350,7 +487,7 @@ export default function CampaignDetailsPage() {
 
           {activeTab === "updates" && (
             <section className="updates-section">
-              {campaign.status !== "closed" && (
+              {campaign.est_active && (
                 <>
                   <div className="section-header">
                     <h2>{t.updates}</h2>
@@ -371,7 +508,7 @@ export default function CampaignDetailsPage() {
                         />
                         <input
                           type="text"
-                          placeholder="Lien vidéo YouTube (optionnel)"
+                          placeholder="Lien vidéo YouTube (optionnelle)"
                           value={updateVideo || ""}
                           onChange={(e) => setUpdateVideo(e.target.value)}
                         />
@@ -390,37 +527,46 @@ export default function CampaignDetailsPage() {
               )}
 
               <div className="updates-list">
-                {updates.map((update) => (
-                  <div key={update.id} className="update-item">
-                    <div className="update-header">
-                      <div className="update-author-info">
-                        <div className="author-avatar">{update.author.charAt(0)}</div>
-                        <div>
-                          <strong>{update.author}</strong>
-                          <span className="update-date">{update.date}</span>
+                {updates.length > 0 ? (
+                  updates.map((update) => (
+                    <div key={update.id} className="update-item">
+                      <div className="update-header">
+                        <div className="update-author-info">
+                          <div className="author-avatar">{update.author.charAt(0)}</div>
+                          <div>
+                            <div className="author-name">{update.author}</div>
+                            <div className="update-date">{update.date}</div>
+                          </div>
+                        </div>
+                        <div className="update-likes">
+                          <button
+                            className={`like-btn ${update.liked ? "liked" : ""}`}
+                            onClick={() => handleLike(update.id)}
+                          >
+                            ❤️ {update.likes}
+                          </button>
                         </div>
                       </div>
+                      <div className="update-content">{update.content}</div>
+                      {update.image && (
+                        <img src={update.image || "/placeholder.svg"} alt="update" className="update-media" />
+                      )}
+                      {update.video && (
+                        <iframe
+                          width="100%"
+                          height="315"
+                          src={update.video}
+                          title="update video"
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        ></iframe>
+                      )}
                     </div>
-                    <p className="update-content">{update.content}</p>
-                    {update.image && (
-                      <img src={update.image || "/placeholder.svg"} alt="Update" className="update-image" />
-                    )}
-                    {update.video && (
-                      <div className="update-video">
-                        <iframe width="100%" height="300" src={update.video} frameBorder="0" allowFullScreen></iframe>
-                      </div>
-                    )}
-                    <div className="update-actions">
-                      <button
-                        className={`like-btn ${update.liked ? "liked" : ""}`}
-                        onClick={() => handleLike(update.id)}
-                      >
-                        ❤️ {update.likes}
-                      </button>
-                      <button className="share-btn">📤 {t.share_update}</button>
-                    </div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <p style={{ textAlign: "center", opacity: 0.6 }}>Aucune actualité pour le moment</p>
+                )}
               </div>
             </section>
           )}
@@ -428,19 +574,12 @@ export default function CampaignDetailsPage() {
           {activeTab === "participants" && (
             <section className="participants-section">
               <h2>{t.participants}</h2>
-              <div className="donations-list">
-                {campaign.donations.map((donation) => (
-                  <div key={donation.id} className="donation-item">
-                    <div className="donation-left">
-                      <div className="donor-avatar">{donation.isAnonymous ? "?" : donation.name.charAt(0)}</div>
-                      <div>
-                        <strong>{donation.isAnonymous ? t.anonymous : donation.name}</strong>
-                        <span className="donation-date">{donation.date}</span>
-                      </div>
-                    </div>
-                    <div className="donation-amount">{donation.isAnonymous ? t.private : `+${donation.amount} €`}</div>
-                  </div>
-                ))}
+              <div className="participants-list">
+                {campaign.nombre_donateurs > 0 ? (
+                  <p style={{ textAlign: "center", opacity: 0.6 }}>{campaign.nombre_donateurs} participants</p>
+                ) : (
+                  <p style={{ textAlign: "center", opacity: 0.6 }}>Aucun participant pour le moment</p>
+                )}
               </div>
             </section>
           )}

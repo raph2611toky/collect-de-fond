@@ -10,7 +10,7 @@ import CreateFundraiser from "../components/Create-fundraiser"
 import ProfilePage from "../components/Profile-page"
 import "../styles/Dashboard.css"
 
-export default function DashboardPage({toast}) {
+export default function DashboardPage({ toast }) {
   const [currentPage, setCurrentPage] = useState("home")
   const { isDark } = useTheme()
   const { language } = useLanguage()
@@ -51,7 +51,13 @@ export default function DashboardPage({toast}) {
     <div className={`dashboard-container ${isDark ? "dark-mode" : "light-mode"}`}>
       <Header toast={toast} />
       <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} translations={translations[language]} />
-      <main className="main-content">{renderPage()}</main>
+      <main className="main-content">
+        {currentPage === "home" ? (
+          <FundraisersList onCreateClick={() => setCurrentPage("create")} toast={toast} />
+        ) : (
+          renderPage()
+        )}
+      </main>
 
       {currentPage !== "create" && (
         <button

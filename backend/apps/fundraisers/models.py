@@ -36,6 +36,7 @@ class Donation(models.Model):
     message = models.TextField(null=True, blank=True)
     est_anonyme = models.BooleanField(default=False)
     masquer_le_montant = models.BooleanField(default=False)
+    est_achevee = models.BooleanField(default=False)
     
     created_at = models.DateTimeField(auto_now_add=True)
     

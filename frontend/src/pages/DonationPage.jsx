@@ -1,6 +1,6 @@
 "use client"
 
-import { useParams, useNavigate } from "react-router-dom"
+import { useSearchParams, useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { useTheme } from "../context/ThemeContext"
 import { useLanguage } from "../context/LanguageContext"
@@ -8,7 +8,7 @@ import Header from "../components/Header"
 import "../styles/Donation.css"
 
 export default function DonationPage() {
-  const { id } = useParams()
+  const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const { isDark } = useTheme()
   const { language } = useLanguage()
@@ -76,10 +76,11 @@ export default function DonationPage() {
 
   const t = translations[language]
   const predefinedAmounts = [50000, 100000, 250000, 500000, 1000000]
+  const encryptedId = searchParams.get("id")
 
   const handlePayment = (e) => {
     e.preventDefault()
-    navigate(`/payment/${id}`, {
+    navigate(`/payment/${encryptedId}`, {
       state: {
         amount: donationAmount,
         name: isAnonymous ? "Anonyme" : donorName,
@@ -91,11 +92,15 @@ export default function DonationPage() {
     })
   }
 
+  const handleBack = () => {
+    navigate(`/campaign/profile?id=${encryptedId}`)
+  }
+
   return (
     <div className={`donation-page ${isDark ? "dark-mode" : "light-mode"}`}>
       <Header />
       <div className="donation-container">
-        <button className="back-btn" onClick={() => navigate(`/campaign/${id}`)}>
+        <button className="back-btn" onClick={handleBack}>
           ← {t.back}
         </button>
 

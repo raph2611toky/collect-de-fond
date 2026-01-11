@@ -3,7 +3,9 @@
 import { useState } from "react"
 import { useTheme } from "../context/ThemeContext"
 import { useLanguage } from "../context/LanguageContext"
+import Toast from "./Toast"
 import RichTextEditor from "./RichTextEditor"
+import api from "../api/axiosClient"
 import "../styles/Create-fundraiser.css"
 
 const translations = {
@@ -15,11 +17,16 @@ const translations = {
     choose_category: "Choisissez une catégorie",
     parameters: "Paramètres",
     private_campaign: "Cagnotte privée",
-    target_amount: "Indiquer un montant à atteindre",
+    target_amount: "Montant à atteindre",
     hide_amount: "Masquer le montant collecté",
     show_participants: "Afficher les participants",
     description: "Description",
     create_btn: "Lancer ma cagnotte",
+    currency: "Devise",
+    video_url: "URL de la vidéo (optionnel)",
+    success: "Cagnotte créée avec succès!",
+    error: "Erreur lors de la création de la cagnotte",
+    loading: "Création en cours...",
     animals: "Animaux",
     events: "Événements",
     humanitarian: "Humanitaire",
@@ -38,11 +45,16 @@ const translations = {
     choose_category: "Pumili ng kategorya",
     parameters: "Mga Parametro",
     private_campaign: "Pribadong Koleksyon",
-    target_amount: "Magpahiwatig ng target na halaga",
+    target_amount: "Target na halaga",
     hide_amount: "Itago ang nakolektang halaga",
     show_participants: "Ipakita ang mga kalahok",
     description: "Paglalarawan",
     create_btn: "Simulan ang Koleksyon",
+    currency: "Pera",
+    video_url: "URL ng Video (Opsyonal)",
+    success: "Matagumpay na Nalikha ang Koleksyon!",
+    error: "Kamalian sa paglikha ng koleksyon",
+    loading: "Lumilikha ngayon...",
     animals: "Hayop",
     events: "Kaganapan",
     humanitarian: "Humanitarian",
@@ -61,11 +73,16 @@ const translations = {
     choose_category: "Choose a category",
     parameters: "Parameters",
     private_campaign: "Private campaign",
-    target_amount: "Set target amount",
+    target_amount: "Target amount",
     hide_amount: "Hide collected amount",
     show_participants: "Show participants",
     description: "Description",
     create_btn: "Launch my campaign",
+    currency: "Currency",
+    video_url: "Video URL (optional)",
+    success: "Campaign created successfully!",
+    error: "Error creating the campaign",
+    loading: "Creating...",
     animals: "Animals",
     events: "Events",
     humanitarian: "Humanitarian",
@@ -79,103 +96,102 @@ const translations = {
 }
 
 const categories = {
-  "FR": {
-    "animals": "Animaux",
-    "events": "Événements",
-    "humanitarian": "Humanitaire",
-    "medical": "Médical",
-    "education": "Éducation",
-    "environment": "Environnement",
-    "community": "Communauté",
-    "children": "Enfance",
-    "women": "Femmes",
-    "youth": "Jeunesse",
-    "elderly": "Personnes âgées",
-    "disability": "Handicap",
-    "mental_health": "Santé mentale",
-    "clean_water": "Eau potable",
-    "food_aid": "Aide alimentaire",
-    "poverty": "Lutte contre la pauvreté",
-    "disaster_relief": "Aide en cas de catastrophe",
-    "refugees": "Réfugiés",
-    "housing": "Logement",
-    "agriculture": "Agriculture",
-    "climate_change": "Changement climatique",
-    "technology": "Technologie",
-    "innovation": "Innovation",
-    "arts_culture": "Arts et culture",
-    "sports": "Sport",
-    "religion": "Religion",
-    "solidarity": "Solidarité",
-    "projects": "Projets",
-    "other": "Autres"
+  FR: {
+    animals: "Animaux",
+    events: "Événements",
+    humanitarian: "Humanitaire",
+    medical: "Médical",
+    education: "Éducation",
+    environment: "Environnement",
+    community: "Communauté",
+    children: "Enfance",
+    women: "Femmes",
+    youth: "Jeunesse",
+    elderly: "Personnes âgées",
+    disability: "Handicap",
+    mental_health: "Santé mentale",
+    clean_water: "Eau potable",
+    food_aid: "Aide alimentaire",
+    poverty: "Lutte contre la pauvreté",
+    disaster_relief: "Aide en cas de catastrophe",
+    refugees: "Réfugiés",
+    housing: "Logement",
+    agriculture: "Agriculture",
+    climate_change: "Changement climatique",
+    technology: "Technologie",
+    innovation: "Innovation",
+    arts_culture: "Arts et culture",
+    sports: "Sport",
+    religion: "Religion",
+    solidarity: "Solidarité",
+    projects: "Projets",
+    other: "Autres",
   },
 
-  "MG": {
-    "animals": "Biby",
-    "events": "Hetsika",
-    "humanitarian": "Fanampiana maha-olona",
-    "medical": "Medikal",
-    "education": "Edukasiona",
-    "environment": "Kapaligiran",
-    "community": "Komonina",
-    "children": "Ankizy",
-    "women": "Vehivavy",
-    "youth": "Tanora",
-    "elderly": "Zokiolona",
-    "disability": "Fahasembanana",
-    "mental_health": "Fahasalamana ara-tsaina",
-    "clean_water": "Rano fisotro madio",
-    "food_aid": "Fanampiana ara-tsakafo",
-    "poverty": "Ady amin’ny fahantrana",
-    "disaster_relief": "Fanampiana amin’ny loza voajanahary",
-    "refugees": "Mpialokaloka",
-    "housing": "Fonena",
-    "agriculture": "Fambolena",
-    "climate_change": "Fiovan’ny toetr’andro",
-    "technology": "Teknolojia",
-    "innovation": "Fanavaozana",
-    "arts_culture": "Zavakanto sy kolontsaina",
-    "sports": "Fanatanjahantena",
-    "religion": "Fivavahana",
-    "solidarity": "Firaisankina",
-    "projects": "Tetikasa",
-    "other": "Hafa"
+  MG: {
+    animals: "Biby",
+    events: "Hetsika",
+    humanitarian: "Fanampiana maha-olona",
+    medical: "Medikal",
+    education: "Edukasiona",
+    environment: "Kapaligiran",
+    community: "Komonina",
+    children: "Ankizy",
+    women: "Vehivavy",
+    youth: "Tanora",
+    elderly: "Zokiolona",
+    disability: "Fahasembanana",
+    mental_health: "Fahasalamana ara-tsaina",
+    clean_water: "Rano fisotro madio",
+    food_aid: "Fanampiana ara-tsakafo",
+    poverty: "Ady amin'ny fahantrana",
+    disaster_relief: "Fanampiana amin'ny loza voajanahary",
+    refugees: "Mpialokaloka",
+    housing: "Fonena",
+    agriculture: "Fambolena",
+    climate_change: "Fiovan'ny toetr'andro",
+    technology: "Teknolojia",
+    innovation: "Fanavaozana",
+    arts_culture: "Zavakanto sy kolontsaina",
+    sports: "Fanatanjahantena",
+    religion: "Fivavahana",
+    solidarity: "Firaisankina",
+    projects: "Tetikasa",
+    other: "Hafa",
   },
 
-  "EN": {
-    "animals": "Animals",
-    "events": "Events",
-    "humanitarian": "Humanitarian",
-    "medical": "Medical",
-    "education": "Education",
-    "environment": "Environment",
-    "community": "Community",
-    "children": "Children",
-    "women": "Women",
-    "youth": "Youth",
-    "elderly": "Elderly",
-    "disability": "Disability",
-    "mental_health": "Mental Health",
-    "clean_water": "Clean Water",
-    "food_aid": "Food Aid",
-    "poverty": "Poverty Alleviation",
-    "disaster_relief": "Disaster Relief",
-    "refugees": "Refugees",
-    "housing": "Housing",
-    "agriculture": "Agriculture",
-    "climate_change": "Climate Change",
-    "technology": "Technology",
-    "innovation": "Innovation",
-    "arts_culture": "Arts & Culture",
-    "sports": "Sports",
-    "religion": "Religion",
-    "solidarity": "Solidarity",
-    "projects": "Projects",
-    "other": "Other"
-  }
-};
-
+  EN: {
+    animals: "Animals",
+    events: "Events",
+    humanitarian: "Humanitarian",
+    medical: "Medical",
+    education: "Education",
+    environment: "Environment",
+    community: "Community",
+    children: "Children",
+    women: "Women",
+    youth: "Youth",
+    elderly: "Elderly",
+    disability: "Disability",
+    mental_health: "Mental Health",
+    clean_water: "Clean Water",
+    food_aid: "Food Aid",
+    poverty: "Poverty Alleviation",
+    disaster_relief: "Disaster Relief",
+    refugees: "Refugees",
+    housing: "Housing",
+    agriculture: "Agriculture",
+    climate_change: "Climate Change",
+    technology: "Technology",
+    innovation: "Innovation",
+    arts_culture: "Arts & Culture",
+    sports: "Sports",
+    religion: "Religion",
+    solidarity: "Solidarity",
+    projects: "Projects",
+    other: "Other",
+  },
+}
 
 export default function CreateFundraiser() {
   const { isDark } = useTheme()
@@ -186,15 +202,18 @@ export default function CreateFundraiser() {
   const [formData, setFormData] = useState({
     image: null,
     imagePreview: null,
-    title: "",
-    customLink: "",
-    category: "humanitarian",
-    isPrivate: false,
-    targetAmount: "",
-    hideAmount: false,
-    showParticipants: true,
+    titre: "",
     description: "",
+    objectif: "",
+    devise: "USD",
+    categorie: "humanitarian",
+    video_url: "",
+    masquer_le_montant: false,
+    date_fin: "",
   })
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [toast, setToast] = useState(null)
 
   const handleImageChange = (e) => {
     const file = e.target.files[0]
@@ -226,14 +245,63 @@ export default function CreateFundraiser() {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log("Campaign data:", formData)
-    alert("Campagne créée avec succès!")
+
+    // Validation
+    if (!formData.titre || !formData.description || !formData.objectif || !formData.date_fin || !formData.image) {
+      setToast({ type: "error", message: t.error })
+      return
+    }
+
+    setIsLoading(true)
+
+    try {
+      // Create FormData for multipart/form-data
+      const apiFormData = new FormData()
+      apiFormData.append("titre", formData.titre)
+      apiFormData.append("description", formData.description)
+      apiFormData.append("objectif", formData.objectif)
+      apiFormData.append("devise", formData.devise)
+      apiFormData.append("categorie", formData.categorie)
+      apiFormData.append("date_fin", formData.date_fin)
+      apiFormData.append("video_url", formData.video_url || "")
+      apiFormData.append("masquer_le_montant", formData.masquer_le_montant)
+      apiFormData.append("image", formData.image)
+
+      console.log("[v0] Submitting fundraiser with FormData")
+      const response = await api.post("/fundraisers/fundraisers/create/", apiFormData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+
+      // Success toast
+      setToast({ type: "success", message: t.success })
+
+      // Reset form
+      setFormData({
+        image: null,
+        imagePreview: null,
+        titre: "",
+        description: "",
+        objectif: "",
+        devise: "USD",
+        categorie: "humanitarian",
+        video_url: "",
+        masquer_le_montant: false,
+        date_fin: "",
+      })
+    } catch (error) {
+      const errorMessage = error?.response?.data?.detail || error?.response?.data?.message || error.message
+      setToast({ type: "error", message: `${t.error}: ${errorMessage}` })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
     <div className={`create-fundraiser ${isDark ? "dark-mode" : "light-mode"}`}>
+      {toast && <Toast message={toast.message} type={toast.type} duration={4000} onClose={() => setToast(null)} />}
+
       <div className="create-container">
         <h1>{t.title}</h1>
 
@@ -269,38 +337,62 @@ export default function CreateFundraiser() {
           </div>
 
           <div className="form-section">
-            <label htmlFor="title">{t.campaign_title}</label>
+            <label htmlFor="titre">{t.campaign_title}</label>
             <input
               type="text"
-              id="title"
-              name="title"
-              value={formData.title}
+              id="titre"
+              name="titre"
+              value={formData.titre}
               onChange={handleInputChange}
-              maxLength="50"
+              maxLength="255"
               placeholder="Ex: Aide chirurgicale pour maman"
               required
             />
           </div>
 
           <div className="form-section">
-            <label htmlFor="customLink">{t.custom_link}</label>
-            <div className="link-input-group">
-              <span className="link-prefix">fanampiana.com/</span>
-              <input
-                type="text"
-                id="customLink"
-                name="customLink"
-                value={formData.customLink}
-                onChange={handleInputChange}
-                maxLength="30"
-                placeholder="pour-alex"
-              />
-            </div>
+            <label htmlFor="date_fin">Date de fin</label>
+            <input
+              type="datetime-local"
+              id="date_fin"
+              name="date_fin"
+              value={formData.date_fin}
+              onChange={handleInputChange}
+              required
+            />
           </div>
 
           <div className="form-section">
-            <label htmlFor="category">{t.choose_category}</label>
-            <select id="category" name="category" value={formData.category} onChange={handleInputChange}>
+            <label htmlFor="objectif">{t.target_amount}</label>
+            <input
+              type="number"
+              id="objectif"
+              name="objectif"
+              value={formData.objectif}
+              onChange={handleInputChange}
+              placeholder="Ex: 5000"
+              step="0.01"
+              required
+            />
+          </div>
+
+          <div className="form-section">
+            <label htmlFor="devise">{t.currency}</label>
+            <input
+              type="text"
+              id="devise"
+              name="devise"
+              value={formData.devise}
+              onChange={handleInputChange}
+              maxLength="10"
+              placeholder="Ex: USD, EUR, MGA"
+              required
+            />
+          </div>
+
+          <div className="form-section">
+            <label htmlFor="categorie">{t.choose_category}</label>
+            <select id="categorie" name="categorie" value={formData.categorie} onChange={handleInputChange}>
               {Object.entries(categoryLabels).map(([key, label]) => (
                 <option key={key} value={key}>
                   {label}
@@ -309,25 +401,30 @@ export default function CreateFundraiser() {
             </select>
           </div>
 
+          <div className="form-section">
+            <label htmlFor="video_url">{t.video_url}</label>
+            <input
+              type="url"
+              id="video_url"
+              name="video_url"
+              value={formData.video_url}
+              onChange={handleInputChange}
+              maxLength="200"
+              placeholder="https://example.com/video"
+            />
+          </div>
+
           <div className="form-section parameters-section">
             <h3>{t.parameters}</h3>
             <div className="checkbox-group">
               <label>
-                <input type="checkbox" name="isPrivate" checked={formData.isPrivate} onChange={handleInputChange} />
-                {t.private_campaign}
-              </label>
-              <label>
-                <input type="checkbox" name="hideAmount" checked={formData.hideAmount} onChange={handleInputChange} />
-                {t.hide_amount}
-              </label>
-              <label>
                 <input
                   type="checkbox"
-                  name="showParticipants"
-                  checked={formData.showParticipants}
+                  name="masquer_le_montant"
+                  checked={formData.masquer_le_montant}
                   onChange={handleInputChange}
                 />
-                {t.show_participants}
+                {t.hide_amount}
               </label>
             </div>
           </div>
@@ -337,8 +434,8 @@ export default function CreateFundraiser() {
             <RichTextEditor value={formData.description} onChange={handleDescriptionChange} language={language} />
           </div>
 
-          <button type="submit" className="submit-btn">
-            {t.create_btn}
+          <button type="submit" className="submit-btn" disabled={isLoading}>
+            {isLoading ? t.loading : t.create_btn}
           </button>
         </form>
       </div>

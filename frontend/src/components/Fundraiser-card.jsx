@@ -1,31 +1,74 @@
 "use client"
 import { useTheme } from "../context/ThemeContext"
+import { useNavigate } from "react-router-dom"
+import { encryptId } from "../hooks/encryption"
 import "../styles/Fundraiser-card.css"
 
 const translations = {
-  mg: { donate: "Magbigay", donors: "Mga Donor" },
-  fr: { donate: "Donner", donors: "Donateurs" },
-  en: { donate: "Donate", donors: "Donors" },
+  mg: { donate: "Magbigay", donors: "Mga Donor", edit: "Hanova", delete: "Fafana" },
+  fr: { donate: "Donner", donors: "Donateurs", edit: "Éditer", delete: "Supprimer" },
+  en: { donate: "Donate", donors: "Donors", edit: "Edit", delete: "Delete" },
 }
 
-export default function FundraiserCard({ fundraiser, language }) {
-  const progressPercent = (fundraiser.raised / fundraiser.goal) * 100
+export default function FundraiserCard({ fundraiser, language, isMyFundraiser, onEdit, onDelete }) {
+  const goal = Number.parseFloat(fundraiser.objectif) || 0
+  const raised = Number.parseFloat(fundraiser.montant_collecte) || 0
+  const devise = fundraiser.devise || "MGA"
+  const progressPercent = goal > 0 ? (raised / goal) * 100 : 0
   const t = translations[language]
-  const { isDark, toggleTheme } = useTheme()
+  const { isDark } = useTheme()
+  const navigate = useNavigate()
+
+  const handleCardClick = () => {
+    const encryptedId = encryptId(fundraiser.id)
+    navigate(`/campaign/profile?id=${encodeURIComponent(encryptedId)}`)
+  }
 
   return (
-    <div className={`fundraiser-card ${isDark ? 'dark-mode' : ''}`}>
+    <div
+      className={`fundraiser-card ${isDark ? "dark-mode" : "light-mode"}`}
+      onClick={handleCardClick}
+      style={{ cursor: "pointer" }}
+    >
+      {isMyFundraiser && (
+        <div className={`card-actions ${isDark ? "dark-mode" : "light-mode"}`}>
+          <button
+            className={`card-action-btn edit-btn ${isDark ? "dark-mode" : "light-mode"}`}
+            onClick={(e) => {
+              e.stopPropagation()
+              onEdit?.(fundraiser)
+            }}
+            title={t.edit}
+          >
+            ✏️
+          </button>
+          <button
+            className={`card-action-btn delete-btn ${isDark ? "dark-mode" : "light-mode"}`}
+            onClick={(e) => {
+              e.stopPropagation()
+              onDelete?.(fundraiser)
+            }}
+            title={t.delete}
+          >
+            🗑️
+          </button>
+        </div>
+      )}
+
       <div className="card-image">
-        <img src={fundraiser.image || "/placeholder.svg"} alt={fundraiser.title} />
-        <div className="card-badge">{fundraiser.category}</div>
+        <img
+          src={fundraiser.image_url || "/placeholder.svg?height=200&width=400&query=fundraiser"}
+          alt={fundraiser.titre}
+        />
+        <div className={`card-badge ${isDark ? "dark-mode" : "light-mode"}`}>{fundraiser.categorie || "Général"}</div>
       </div>
 
-      <div className="card-content">
-        <h3 className="card-title">{fundraiser.title}</h3>
-        <p className="card-description">{fundraiser.description}</p>
+      <div className={`card-content ${isDark ? "dark-mode" : "light-mode"}`}>
+        <h3 className="card-title">{fundraiser.titre}</h3>
+        <p className="card-description">{fundraiser.brief_description}</p>
 
         <div className="card-meta">
-          <span className="creator">by {fundraiser.creator}</span>
+          <span className="creator">by {fundraiser?.createur?.nom_complet || "Anonyme"}</span>
         </div>
 
         <div className="progress-section">
@@ -33,18 +76,22 @@ export default function FundraiserCard({ fundraiser, language }) {
             <div className="progress-bar" style={{ width: `${Math.min(progressPercent, 100)}%` }}></div>
           </div>
           <div className="progress-info">
-            <span className="raised">{(fundraiser.raised / 1000000).toFixed(1)}M</span>
-            <span className="goal">{(fundraiser.goal / 1000000).toFixed(1)}M</span>
+            <span className="raised">
+              {(raised / 1000).toFixed(2)}K {devise}
+            </span>
+            <span className="goal">
+              {(goal / 1000).toFixed(2)}K {devise}
+            </span>
           </div>
         </div>
 
         <div className="card-footer">
           <div className="donors-info">
             <span>
-              👥 {fundraiser.donors} {t.donors}
+              👥 {fundraiser.nombre_donateurs || 0} {t.donors}
             </span>
           </div>
-          <button className="donate-btn">{t.donate}</button>
+          <button className={`donate-btn ${isDark ? "dark-mode" : "light-mode"}`}>{t.donate}</button>
         </div>
       </div>
     </div>

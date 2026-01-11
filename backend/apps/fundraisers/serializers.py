@@ -2,6 +2,9 @@ from rest_framework import serializers
 from django.utils import timezone
 from apps.fundraisers.models import Fundraiser, Donation, Payment, Comment
 from apps.users.serializers import UserSerializer
+from django.conf import settings
+from helpers.helper import enc_dec
+from urllib.parse import urlparse, parse_qs
 
 
 class FundraiserListSerializer(serializers.ModelSerializer):
@@ -9,21 +12,65 @@ class FundraiserListSerializer(serializers.ModelSerializer):
     progression = serializers.SerializerMethodField()
     jours_restants = serializers.SerializerMethodField()
     est_termine = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField()
+    brief_description = serializers.SerializerMethodField()
+    nombre_donateurs = serializers.SerializerMethodField()
+    video_url = serializers.SerializerMethodField()
     
     class Meta:
         model = Fundraiser
         fields = [
-            'id', 'titre', 'description', 'objectif', 'montant_collecte', 'devise',
-            'date_debut', 'date_fin', 'est_active', 'image', 'categorie',
-            'createur', 'progression', 'jours_restants', 'est_termine',
+            'id', 'titre', 'description', 'brief_description', 'objectif', 'montant_collecte', 'devise',
+            'date_debut', 'date_fin', 'est_active', 'image_url', 'video_url', 'categorie',
+            'createur', 'progression', 'jours_restants', 'est_termine', 'nombre_donateurs',
             'masquer_le_montant', 'est_validee', 'created_at', 'updated_at'
         ]
         read_only_fields = ['montant_collecte', 'date_debut', 'created_at', 'updated_at']
+        
+    def _to_youtube_embed(self, url: str):
+        if not url:
+            return None
 
+        try:
+            u = urlparse(url)
+            host = (u.netloc or "").lower()
+
+            if "youtu.be" in host:
+                video_id = u.path.strip("/").split("/")[0]
+                return f"https://www.youtube.com/embed/{video_id}" if video_id else url
+
+            if "youtube.com" in host:
+                qs = parse_qs(u.query)
+                video_id = (qs.get("v") or [None])[0]
+                return f"https://www.youtube.com/embed/{video_id}" if video_id else url
+
+            return url
+        except Exception:
+            return url
+        
+    def get_video_url(self, obj):
+        if obj.video_url:
+            return self._to_youtube_embed(obj.video_url)
+        return None
+        
+    def get_nombre_donateurs(self, obj):
+        return obj.donations.count()
+    
     def get_progression(self, obj):
         if obj.objectif <= 0:
             return 0
         return round((obj.montant_collecte / obj.objectif) * 100, 2)
+    
+    def get_brief_description(self, obj):
+        if len(obj.description.split()) > 20:
+            return " ".join(obj.description.split()[:20]) + " ..."
+        return obj.description
+    
+    def get_image_url(self, obj):
+        if obj.image:
+            return f'{settings.BASE_URL}{obj.image.url}'
+        return None
+    
 
     def get_jours_restants(self, obj):
         if not obj.date_fin:
@@ -65,7 +112,7 @@ class DonationListSerializer(serializers.ModelSerializer):
         model = Donation
         fields = [
             'id', 'donateur_nom', 'donateur_email', 'montant', 'devise',
-            'message', 'est_anonyme', 'masquer_le_montant', 'created_at'
+            'message', 'est_anonyme', 'masquer_le_montant', 'est_achevee', 'created_at'
         ]
         read_only_fields = fields
 
@@ -93,6 +140,21 @@ class PaymentSerializer(serializers.ModelSerializer):
             'created_at', 'updated_at'
         ]
         read_only_fields = fields
+
+class PaymentCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = ['reference_transaction', 'methode_paiement', 'statut']
+        extra_kwargs = {
+            'statut': {'required': False}
+        }
+
+class DonationPaymentCreateSerializer(serializers.Serializer):
+    donation = DonationCreateSerializer()
+    payement = PaymentCreateSerializer()
+
+    def validate(self, attrs):
+        return attrs
 
 
 class CommentListSerializer(serializers.ModelSerializer):
